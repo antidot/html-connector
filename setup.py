@@ -15,7 +15,7 @@ setuptools.setup(
     description="HTML connector to FluidTopics",
     long_description=get_readme(),
     long_description_content_type="text/markdown",
-    version="0.1.0",
+    version="0.1.1",
     author="Antidot",
     author_email="copro@antidot.net",
     entry_points={"console_scripts": ["html2ft=copro.html_connector.main:run"]},

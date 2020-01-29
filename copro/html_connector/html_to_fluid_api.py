@@ -16,8 +16,8 @@ except ImportError:
     FTML_AVAILABLE = False
 
 
-def html_to_fluid_api(html_input: str, title: str, use_ftml: bool, metadatas: []) -> Publication:
-    html_path = Path(html_input)
+def html_to_fluid_api(html_path: str, title: str, use_ftml: bool, metadatas: []) -> Publication:
+    html_path = Path(html_path)
     with open(html_path, "r") as html:
         html_content = html.read()
     name = "{}-{}".format(html_path.name, "-".join([str(m) for m in metadatas]))

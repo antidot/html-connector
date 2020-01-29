@@ -23,3 +23,18 @@ xdg-open htmlcov/index.html
 ```
 
 # Usage
+
+If you want to send your data directly to FluidTopics:
+
+```
+from copro.html_connector import  html_to_published_fluid_api
+
+html_to_published_fluid_api(html_path: str, url: str, login: str, password: str, use_ftml: bool, metadatas: list)
+```
+
+If you want to get the publications from your html file:
+```
+from copro.html_connector import html_to_fluid_api
+
+html_to_fluid_api(html_path: str, title: str, use_ftml: bool, metadatas: []) -> Publication:
+```

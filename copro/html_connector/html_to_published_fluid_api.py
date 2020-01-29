@@ -9,12 +9,12 @@ LOGGER = logging.getLogger(__name__)
 
 
 def html_to_published_fluid_api(
-    path, url, login, password, use_ftml=False, metadatas=None
+    html_path: str, url: str, login: str, password: str, use_ftml: bool = False, metadatas: list = None
 ):  # pylint: disable=too-many-arguments
     if metadatas is None:
         metadatas = []
-    title = Path(path).name.replace(".html", "")
-    publications = html_to_fluid_api(path, title, use_ftml, metadatas)
+    title = Path(html_path).name.replace(".html", "")
+    publications = html_to_fluid_api(html_path, title, use_ftml, metadatas)
     send_to_ft(url, login, password, publications)
 
 
