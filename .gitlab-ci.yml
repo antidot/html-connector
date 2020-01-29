@@ -1,0 +1,81 @@
+stages:
+  - lint
+  - tests
+  - release
+
+.test:template: &test_template
+  stage: tests
+  script:
+    - pip3 install tox
+    - pip3 install -e .
+    - tox -e ${PYTHON_VERSION}
+
+python:test-3.5:
+  <<: *test_template
+  image: python:3.5
+  allow_failure: true
+  variables:
+    PYTHON_VERSION: py35
+
+python:test-3.6:
+  <<: *test_template
+  image: python:3.6
+  variables:
+    PYTHON_VERSION: py36
+
+python:test-3.7:
+  <<: *test_template
+  image: python:3.7
+  variables:
+    PYTHON_VERSION: py37
+
+python:test-3.8:
+  <<: *test_template
+  image: python:3.8
+  variables:
+    PYTHON_VERSION: py38
+
+
+python-lint:
+  stage: lint
+  image: python:3.6
+  script:
+    - pip3 install tox
+    - curl http://scm.mrs.antidot.net/general/antidhooks/raw/master/.flake8 -O
+    - curl http://scm.mrs.antidot.net/general/antidhooks/raw/master/.pylintrc -O
+    - curl http://scm.mrs.antidot.net/general/antidhooks/raw/master/.isort.cfg -O
+    - tox -e formatting
+
+
+.release:template: &release_template
+  stage: release
+  image: python:3.6
+  script:
+    - pip3 install -U devpi-client pip wheel Sphinx
+    - devpi use --set-cfg ${DEVPI_INDEX}
+    - devpi login ${DEVPI_USER} --password ${DEVPI_PASSWD}
+    - devpi upload
+    #- sphinx-apidoc --ext-autodoc --ext-intersphinx --ext-viewcode --ext-todo -f -o docs/api src/afs
+    # - devpi upload --no-vcs --only-docs
+  except:
+    - branches
+  only:
+    - tags
+
+# Release to stable index.
+stable-release:
+  <<: *release_template
+  except:
+    - branches
+  only:
+    - tags
+  variables:
+    DEVPI_INDEX: http://pypi.mrs.antidot.net/antidot/stable
+
+# Automatic pre-release to unstable index.
+unstable-release:
+  <<: *release_template
+  variables:
+    DEVPI_INDEX: http://pypi.mrs.antidot.net/antidot/unstable
+  only:
+    - branches

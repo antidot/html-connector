@@ -1,0 +1,18 @@
+__pycache__/
+copro_html_connector.egg-info/
+.eggs/
+build/
+dist/
+.coverage
+.tox/
+htmlcov/
+
+# Configuration file added automatically by antidhooks/install.py
+.clang-format
+.pre-commit-config.yaml
+.clang-tidy
+.pylintrc
+.eslintrc.json
+.flake8
+.csslintrc
+.isort.cfg
