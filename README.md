@@ -15,7 +15,6 @@ pip3 install copro-html-connector -i https://pypi.mrs.antidot.net/antidot/stable
 # Development
 
 ```bash
-cd src/
 python3 -m venv venv
 source venv/bin/activate
 # Use
