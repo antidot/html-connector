@@ -6,6 +6,7 @@ from copro.html_connector.html_splitter_by_header import HtmlSplitterByHeader
 from copro.html_connector.html_to_topics import HtmlToTopics
 
 try:
+    # pylint: disable=import-error
     from ftml.builders.topic import TopicBuilder
     from ftml.converters.publication import PublicationConverter
     from ftml.workflow.topics_splitter import TopicsSplitter
