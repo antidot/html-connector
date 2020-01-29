@@ -12,7 +12,7 @@ try:
     from ftml.workflow.topics_splitter import TopicsSplitter
 
     FTML_AVAILABLE = True
-except ModuleNotFoundError:
+except ImportError:
     FTML_AVAILABLE = False
 
 
