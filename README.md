@@ -11,6 +11,13 @@ content automatically.
 pip3 install copro-html-connector -i https://pypi.mrs.antidot.net/antidot/stable/
 ```
 
+# Optional split algorithm
+
+If you can and want to use the FTML you also need to install the FTML connector:
+
+```bash
+pip3 install antidot-fluidtopics-ftml-connector -i https://pypi.mrs.antidot.net/antidot/stable/
+```
 
 # Development
 
@@ -53,7 +60,8 @@ publication = html_to_fluid_api(html_path, title)
 
 ### FTML splitting algorithm
 
-You can use the FTML splitting algorithm. In this case add the use_ftml parameter:
+You can use the FTML splitting algorithm. You will need to install the
+FTML connector first. Once it's done you can then add the `use_ftml` parameter:
 
 ```python
 from copro.html_connector import  html_to_published_fluid_api, html_to_fluid_api
