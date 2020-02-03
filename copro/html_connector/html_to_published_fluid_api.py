@@ -26,4 +26,4 @@ def send_to_ft(url, login, password, publications):
         if url.endswith("/"):
             url = url[:-1]
         url = "{}{}".format(url, "/admin/khub/sources")
-        LOGGER.error("Please create an 'external' source with the name '%s' here '%s'", source_id, url)
+        LOGGER.error("Please create an 'external' source with the ID '%s' here '%s'", source_id, url)
