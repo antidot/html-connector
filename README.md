@@ -35,7 +35,20 @@ xdg-open htmlcov/index.html
 
 # Usage
 
-## Default behavior
+## Using as a binary
+
+Install the python package, then you can use the `html2ft` binary.
+
+```
+html2ft path/to/file.html --url my.fluidtopics.tenant.url --login my@ddress.com
+```
+
+You can add the `--verbose` or `--password myStr0ngP@ssword` options.
+
+If you want to use the FTML connector for splitting your HTML and if
+it's installed, you can use the `--use-ftml` option.
+
+## Using as a library
 
 ### Sending directly to FT
 
@@ -44,7 +57,12 @@ If you want to send your data directly to FluidTopics:
 ```python
 from copro.html_connector import  html_to_published_fluid_api
 
-html_to_published_fluid_api(html_path, url, login, password)
+html_to_published_fluid_api(html_path, url, login, password, source_id)
+
+# Or use a Client from the fluidtopics package.
+from fluidtopics.connector import RemoteClient
+client = RemoteClient(url, login, password, source_id)
+html_to_published_fluid_api(html_path, client=client)
 ```
 
 ### Getting the intermediary publications objects
