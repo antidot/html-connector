@@ -32,9 +32,14 @@ class TestMain(unittest.TestCase):
         sys.argv = self.temp_sysargv
 
     def test_file_do_not_exists(self):
-        sys.argv = BASE + ["mydoc.docx"] + VERBOSE_OPTION
+        docx_name = "mydoc.docx"
+        sys.argv = BASE + [docx_name] + VERBOSE_OPTION
         with self.assertRaises(FileNotFoundError):
             run()
+        sys.argv = BASE + [docx_name] + ["--no-verbose"]
+        with self.assertRaises(FileNotFoundError) as e:
+            run()
+        self.assertIn("[Errno 2] No such file or directory: '{}'".format(docx_name), str(e.exception))
 
     def test_main_html(self):
         for html_path in HTML_PATHS:
