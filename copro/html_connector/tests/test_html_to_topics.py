@@ -8,9 +8,44 @@ HERE = Path(__file__).parent
 FIXTURE_DIR = Path(HERE).joinpath("fixtures")
 
 
-class TestHtmlToFLuidApi(unittest.TestCase):
+class TestHtmlToTopics(unittest.TestCase):
 
     maxDiff = None
+
+    def test_broken_toc(self):
+        # pylint: disable=expression-not-assigned,no-self-use
+        class WorstSplitter:
+            def split(self):
+                return [{"title": "This won't work, we need the content and header_type keys"}]
+
+        with self.assertRaises(RuntimeError) as rte:
+            HtmlToTopics(WorstSplitter()).topics
+        self.assertIn("Error when initializing topics", str(rte.exception))
+
+        title = "Content can't be None"
+
+        class WorseSplitter:
+            def split(self):
+                return [{"content": None, "header_type": "h1", "title": title}]
+
+        with self.assertRaises(AssertionError) as rte:
+            HtmlToTopics(WorseSplitter()).topics
+        self.assertIn("Content related to '{}' should be a string".format(title), str(rte.exception))
+
+        class BadSplitter:
+            def split(self):
+                return [
+                    {
+                        "content": "Valid content",
+                        "children": ["We need a dict"],
+                        "header_type": "h1",
+                        "title": "Valid title",
+                    }
+                ]
+
+        with self.assertRaises(TypeError) as rte:
+            HtmlToTopics(BadSplitter()).topics
+        self.assertIn("Expected a dict", str(rte.exception))
 
     def test_heading(self):
         splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("heading.html"))
