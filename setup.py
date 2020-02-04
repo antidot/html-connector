@@ -1,5 +1,7 @@
 import setuptools
 
+from sphinx.setup_command import BuildDoc
+
 
 def get_readme():
     with open("README.md", "r") as file:
@@ -7,15 +9,19 @@ def get_readme():
     return content
 
 
+cmdclass = {"build_sphinx": BuildDoc}
+
 TEST_REQUIRES = ["pytest-cov"]
 SETUPTOOLS = "setuptools~=42.0.2"
+VERSION = "0.1.3"
 
+NAME = "copro-html-connector"
 setuptools.setup(
-    name="copro-html-connector",
+    name=NAME,
     description="HTML connector to FluidTopics",
     long_description=get_readme(),
     long_description_content_type="text/markdown",
-    version="0.1.2",
+    version=VERSION,
     author="Antidot",
     author_email="copro@antidot.net",
     entry_points={"console_scripts": ["html2ft=copro.html_connector.main:run"]},
@@ -26,10 +32,18 @@ setuptools.setup(
     ],
     packages=setuptools.find_namespace_packages(),
     package_dir={},
+    cmdclass=cmdclass,
     install_requires=["beautifulsoup4", "fluidtopics>=0.2.0"],
     setup_requires=[SETUPTOOLS],
     tests_require=TEST_REQUIRES,
     extras_require={"test": TEST_REQUIRES, "setup": [SETUPTOOLS]},
     url="https://scm.mrs.antidot.net/copro/html-connector",
     zip_safe=True,
+    command_options={
+        "build_sphinx": {
+            "project": ("setup.py", NAME),
+            "version": ("setup.py", VERSION),
+            "source_dir": ("setup.py", "doc"),
+        }
+    },
 )

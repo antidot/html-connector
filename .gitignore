@@ -7,6 +7,9 @@ dist/
 .tox/
 htmlcov/
 
+# Generated Sphinx documentation
+doc/source/api/
+
 # Configuration file added automatically by antidhooks/install.py
 .clang-format
 .pre-commit-config.yaml
