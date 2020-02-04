@@ -30,5 +30,6 @@ setuptools.setup(
     setup_requires=[SETUPTOOLS],
     tests_require=TEST_REQUIRES,
     extras_require={"test": TEST_REQUIRES, "setup": [SETUPTOOLS]},
+    url="https://scm.mrs.antidot.net/copro/html-connector",
     zip_safe=True,
 )
