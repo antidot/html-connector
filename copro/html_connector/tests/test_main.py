@@ -1,11 +1,13 @@
 import sys
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import requests
 
 from copro.html_connector.main import run
 
+BASE_WITHOUT_PASSWORD = ["xtoFt", "--login", "login", "--url", "my.fluidtopic.futile"]
 BASE = ["xtoFt", "--login", "login", "--url", "my.fluidtopic.futile", "--password", "p@ssword"]
 CONVERTER_OPTION = ["--converter"]
 HERE = Path(__file__).parent
@@ -15,6 +17,11 @@ NAMES = ["heading", "headings", "simple_headings", "tables"]
 HTML_NAMES = ["{}.html".format(n) for n in NAMES + ["example", "title_with_tags"]]
 
 HTML_PATHS = [Path(FIXTURE_PATH, name) for name in HTML_NAMES]
+
+
+def mock_getpass(prompt):
+    print(prompt)
+    return "getpasspassword"
 
 
 class TestMain(unittest.TestCase):
@@ -35,3 +42,10 @@ class TestMain(unittest.TestCase):
             with self.assertRaises(requests.exceptions.MissingSchema):
                 fail_msg = "Problem during the treatment of {}.".format(html_path)
                 self.assertEqual(run(), None, fail_msg)
+
+    @patch("getpass.getpass", mock_getpass)
+    def test_password(self):
+        sys.argv = BASE_WITHOUT_PASSWORD + ["path"]
+        with self.assertRaises(FileNotFoundError) as e:
+            run()
+        self.assertIn("[Errno 2] No such file or directory: 'path'", str(e.exception))
