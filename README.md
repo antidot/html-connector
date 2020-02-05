@@ -55,14 +55,15 @@ it's installed, you can use the `--use-ftml` option.
 If you want to send your data directly to FluidTopics:
 
 ```python
-from copro.html_connector import  html_to_published_fluid_api
+from copro.html_connector import publish_html, publish_html_with_client
 
-html_to_published_fluid_api(html_path, url, login, password, source_id)
+publish_html(html_path, url, login, password)
 
 # Or use a Client from the fluidtopics package.
 from fluidtopics.connector import RemoteClient
+
 client = RemoteClient(url, login, password, source_id)
-html_to_published_fluid_api(html_path, client=client)
+publish_html_with_client(html_path, client=client)
 ```
 
 ### Getting the intermediary publications objects
@@ -82,9 +83,11 @@ You can use the FTML splitting algorithm. You will need to install the
 FTML connector first. Once it's done you can then add the `use_ftml` parameter:
 
 ```python
-from copro.html_connector import  html_to_published_fluid_api, html_to_fluid_api
+from copro.html_connector import publish_html, publish_html_with_client, html_to_fluid_api
+from fluidtopics.connector import RemoteClient
 
-html_to_published_fluid_api(html_path, url, login, password, use_ftml=True)
+publish_html(html_path, url, login, password, use_ftml=True)
+publish_html_with_client(html_path, RemoteClient(url, login, password, source_id), use_ftml=True)
 publication = html_to_fluid_api(html_path, title, use_ftml=True)
 ```
 
@@ -94,16 +97,17 @@ You can also add metadata to the publication. In order to do that give a
 list of metadata with the metadatas parameter:
 
 ```python
-from fluidtopics.connector import Metadata
-from copro.html_connector import html_to_fluid_api, html_to_published_fluid_api
-
 from datetime import datetime
+
+from fluidtopics.connector import Metadata, RemoteClient
+from copro.html_connector import html_to_fluid_api, publish_html, publish_html_with_client
 
 use_ftml = True
 metadatas = [
     Metadata.string("splitting_algorithm", ["ftml" if use_ftml else "default"]),
     Metadata.last_edition(datetime.now().strftime("%Y-%m-%d")),
 ]
-html_to_published_fluid_api(html_path, url, login, password, use_ftml=use_ftml, metadatas=metadatas)
+publish_html(html_path, url, login, password, use_ftml=use_ftml, metadatas=metadatas)
+publish_html_with_client(html_path, RemoteClient(url, login, password, source_id), metadatas, use_ftml)
 publication = html_to_fluid_api(html_path, title, use_ftml=True, metadatas=metadatas)
 ```
