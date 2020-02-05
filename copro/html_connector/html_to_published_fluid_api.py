@@ -4,6 +4,7 @@ from typing import Optional
 
 from fluidtopics.connector import Client, LoginAuthentication, RemoteClient
 
+from copro.html_connector.external_source_id_does_not_exists_error import ExternalSourceIdDoesNotExistsError
 from copro.html_connector.html_to_fluid_api import html_to_fluid_api
 
 LOGGER = logging.getLogger(__name__)
@@ -43,7 +44,4 @@ def html_to_published_fluid_api(
 def send_to_ft(client, publications):
     response = client.publish(publications)
     if response.status_code == 404 and client.source_id in response.content.decode("utf8"):
-        if client.url.endswith("/"):
-            url = client.url[:-1]
-        url = "{}{}".format(url, "/admin/khub/sources")
-        LOGGER.error("Please create an 'external' source with the ID '%s' here '%s'", client.source_id, url)
+        raise ExternalSourceIdDoesNotExistsError(client)
