@@ -36,7 +36,7 @@ class TestMain(unittest.TestCase):
         sys.argv = BASE + [docx_name] + VERBOSE_OPTION
         with self.assertRaises(FileNotFoundError):
             run()
-        sys.argv = BASE + [docx_name] + ["--no-verbose"]
+        sys.argv = BASE + [docx_name]
         with self.assertRaises(FileNotFoundError) as e:
             run()
         self.assertIn("[Errno 2] No such file or directory: '{}'".format(docx_name), str(e.exception))

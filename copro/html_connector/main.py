@@ -10,6 +10,7 @@ def run():
     args = parse_args()
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)
+        logging.debug("%s launched in verbose mode", HTML_CONNECTOR_SOURCE_ID)
     else:
         logging.basicConfig(level=logging.WARNING)
     html_to_published_fluid_api(args.path, args.url, args.login, args.password, args.use_ftml)
@@ -24,8 +25,7 @@ def parse_args():
     parser.add_argument(
         "--use-ftml", help="Force using the FT FTML connector", dest="use_ftml", action="store_true", default=False
     )
-    parser.add_argument("--verbose", help="Verbosity of the logging", dest="verbose", action="store_true")
-    parser.add_argument("--no-verbose", help="Verbosity of the logging", dest="verbose", action="store_false")
+    parser.add_argument("--verbose", help="Verbosity of the logging", action="store_true", default=False)
     args = parser.parse_args()
     if not args.password:
         args.password = getpass.getpass(
