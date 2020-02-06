@@ -1,6 +1,6 @@
 __pycache__/
-copro_html_connector.egg-info/
-.eggs/
+*.eggs/
+*.egg-info/
 build/
 dist/
 .coverage

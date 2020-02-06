@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 import requests
 
-from copro.html_connector.main import run
+from antidot.connector.main import run
 
 BASE_WITHOUT_PASSWORD = ["xtoFt", "--login", "login", "--url", "my.fluidtopic.futile"]
 BASE = ["xtoFt", "--login", "login", "--url", "my.fluidtopic.futile", "--password", "p@ssword"]

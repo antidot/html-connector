@@ -9,7 +9,7 @@ from fluidtopics.connector import (
     StructuredContent,
 )
 
-from copro.html_connector.html_to_topics import NeoTopic
+from antidot.connector.html.html_to_topics import NeoTopic
 
 #   from fluidtopics.connector import    TocNode,    Topic,    Body,
 

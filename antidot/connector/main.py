@@ -10,8 +10,8 @@ from typing import Optional
 
 from fluidtopics.connector import Client, LoginAuthentication, RemoteClient
 
-from copro.html_connector.external_source_id_does_not_exists_error import ExternalSourceIdDoesNotExistsError
-from copro.html_connector.html_to_fluid_api import html_to_fluid_api
+from antidot.connector.external_source_id_does_not_exists_error import ExternalSourceIdDoesNotExistsError
+from antidot.connector.html_to_fluid_api import html_to_fluid_api
 
 LOGGER = logging.getLogger(__name__)
 HTML_CONNECTOR_SOURCE_ID = "HTMLConnector"
