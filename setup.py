@@ -1,8 +1,11 @@
+from pathlib import Path
+
 import setuptools
 
 
 def get_readme():
-    with open("README.md", "r") as file:
+    here = Path(__file__).parent
+    with open(Path(here, "README.md"), "r") as file:
         content = file.read()
     return content
 
