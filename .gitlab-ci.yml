@@ -55,12 +55,9 @@ python-lint:
     - devpi use --set-cfg ${DEVPI_INDEX}
     - devpi login ${DEVPI_USER} --password ${DEVPI_PASSWD}
     - devpi upload
-    #- sphinx-apidoc --ext-autodoc --ext-intersphinx --ext-viewcode --ext-todo -f -o docs/api src/afs
-    # - devpi upload --no-vcs --only-docs
-  except:
-    - branches
-  only:
-    - tags
+    - sphinx-apidoc --ext-autodoc --ext-intersphinx --ext-viewcode --ext-todo -f -o doc/source/api antidot/connector/html
+    - devpi upload --no-vcs --only-docs
+
 
 # Release to stable index.
 stable-release:

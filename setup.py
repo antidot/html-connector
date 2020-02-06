@@ -12,7 +12,7 @@ def get_readme():
 
 TEST_REQUIRES = ["pytest-cov"]
 SETUPTOOLS = "setuptools~=42.0.2"
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 
 NAME = "antidot-html-connector"
 setuptools.setup(

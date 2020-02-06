@@ -9,7 +9,7 @@ Welcome to Html Connector's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-   api/antidot
+   api/antidot/connector/html/
 
 Indices and tables
 ==================
