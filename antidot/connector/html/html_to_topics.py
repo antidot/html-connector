@@ -1,4 +1,4 @@
-from antidot.connector.neo_topics import NeoTopic
+from antidot.connector.html.neo_topics import NeoTopic
 
 
 class HtmlToTopics:

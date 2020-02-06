@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-from antidot.connector.html_splitter import HtmlSplitter
+from antidot.connector.html.html_splitter import HtmlSplitter
 
 HERE = Path(__file__).parent
 FIXTURE_DIR = Path(HERE).joinpath("fixtures")

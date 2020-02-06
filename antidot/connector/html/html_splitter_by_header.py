@@ -1,6 +1,6 @@
 import logging
 
-from antidot.connector.html_splitter import BaseHtmlSplitter, HtmlSplitter
+from antidot.connector.html.html_splitter import BaseHtmlSplitter, HtmlSplitter
 
 LOGGER = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)

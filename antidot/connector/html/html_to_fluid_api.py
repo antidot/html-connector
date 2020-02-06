@@ -2,8 +2,8 @@ from pathlib import Path
 
 from fluidtopics.connector import EditorialType, Metadata, Publication, PublicationBuilder, StructuredContent
 
-from antidot.connector.html_splitter_by_header import HtmlSplitterByHeader
-from antidot.connector.html_to_topics import HtmlToTopics
+from antidot.connector.html.html_splitter_by_header import HtmlSplitterByHeader
+from antidot.connector.html.html_to_topics import HtmlToTopics
 
 try:
     # pylint: disable=import-error
