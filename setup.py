@@ -9,7 +9,7 @@ def get_readme():
 
 TEST_REQUIRES = ["pytest-cov"]
 SETUPTOOLS = "setuptools~=42.0.2"
-VERSION = "0.1.3"
+VERSION = "0.2.0"
 
 NAME = "antidot-html-connector"
 setuptools.setup(
@@ -22,9 +22,15 @@ setuptools.setup(
     author_email="psassoulas@antidot.net",
     entry_points={"console_scripts": ["html2ft=antidot.connector.html.main:run"]},
     classifiers=[
+        "Operating System :: OS Independent",
         "Intended Audience :: Developers",
-        "Programming Language :: Python :: 3",
         "License :: Other/Proprietary License",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Development Status :: 3 - Alpha",
+        "Topic :: Documentation",
+        "Topic :: Internet :: WWW/HTTP :: Indexing/Search",
     ],
     packages=setuptools.find_namespace_packages(),
     package_dir={},

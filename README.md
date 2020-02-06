@@ -46,7 +46,7 @@ html2ft path/to/file.html --url my.fluidtopics.tenant.url --login my@ddress.com
 You can add the `--verbose` or `--password myStr0ngP@ssword` options.
 
 If you want to use the FTML connector for splitting your HTML and if
-it's installed, you can use the `--use-ftml` option.
+it's installed locally, you can use the `--use-ftml` option.
 
 ## Using as a library
 
