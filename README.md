@@ -1,11 +1,33 @@
 # HTML connector
 
-[![coverage report](https://scm.mrs.antidot.net/copro/html-connector/badges/master/coverage.svg)](https://scm.mrs.antidot.net/copro/html-connector/commits/master)
-
 This connector permits to import HTML into your FluidTopics instance and
 create the table of content automatically. The content of your HTML file
 should be available on your FluidTopics instance as soon as the content
 processing is finished.
+
+# Example
+
+You have an HTML file `lorem.html`:
+
+![HTML to import](doc/static/lorem_html.png "HTML to import")
+
+
+And a FluidTopics tenant up and running at "my.fluidtopics.tenant.url".
+
+```bash
+# Install the HTML connector (only once)
+pip3 install antidot-html-connector -i https://pypi.mrs.antidot.net/antidot/stable/
+#  Send "lorem.html" to the FT instance
+html2ft lorem.html --url my.fluidtopics.tenant.url --login my@ddress.com --password mypassword
+```
+
+You can see your imprrt in the content processing:
+
+![Content processing](doc/static/lorem_content_processing.png "Content processing")
+
+And your document is uploaded in FluidTopics with a generated table of content:
+
+![lorem in Fluid topics](doc/static/lorem_ft.png "Lorem in Fluid Topics")
 
 # Installing
 
@@ -104,6 +126,8 @@ publication = html_to_fluid_api(html_path, title, use_ftml=True, metadatas=metad
 ```
 
 # Development
+
+[![coverage report](https://scm.mrs.antidot.net/copro/html-connector/badges/master/coverage.svg)](https://scm.mrs.antidot.net/copro/html-connector/commits/master)
 
 ```bash
 python3 -m venv venv
