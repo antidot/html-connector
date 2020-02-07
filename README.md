@@ -70,7 +70,7 @@ If you want to send your data directly to FluidTopics:
 ```python
 from antidot.connector.html import publish_html
 
-publish_html(html_path, url, login, password)
+publish_html("path/to/file.html", "my.fluidtopics.tenant.url", "my@ddress.com", "myStr0ngP@ssword")
 ```
 
 You can also use a Client object from the fluidtopics package:
@@ -79,8 +79,8 @@ You can also use a Client object from the fluidtopics package:
 from fluidtopics.connector import RemoteClient
 from antidot.connector.html import publish_html_with_client
 
-client = RemoteClient(url, login, password, source_id)
-publish_html_with_client(html_path, client=client)
+client = RemoteClient("my.fluidtopics.tenant.url", "my@ddress.com", "myStr0ngP@ssword", "mySourceID")
+publish_html_with_client("path/to/file.html", client=client)
 ```
 
 ### Getting the intermediary publications objects
@@ -90,7 +90,7 @@ If you want to get the publications from your html file:
 ```python
 from antidot.connector.html import html_to_fluid_api
 
-publication = html_to_fluid_api(html_path, title)
+publication = html_to_fluid_api("path/to/file.html", "Publication title")
 ```
 
 Using the function that return publications you can use a decorator
@@ -103,8 +103,12 @@ from fluidtopics.connector import LoginAuthentication, Metadata, Publication, Re
 from antidot.connector.generic.decorators import ClientAuthentication, LoginAndPasswordAuthentication
 from antidot.connector.html import html_to_fluid_api
 
+url = "my.fluidtopics.tenant.url"
+login = "my@ddress.com"
+password = "myStr0ngP@ssword"
+source_id = "MySourceId"
 
-@ClientAuthentication(RemoteClient(url, LoginAuthentication(login, password)), source_id))
+@ClientAuthentication(RemoteClient(url, LoginAuthentication(login, password)), source_id)
 def html_to_fluid_api_ftml_plugin(html_path) -> list[Publication]:
     metadatas = [
         Metadata.last_edition(datetime.now().strftime("%Y-%m-%d")),
@@ -130,12 +134,23 @@ def html_to_fluid_api_plugin(html_path) -> list[Publication]:
 You can render the coverpage using the render_cover_page option.
 
 ```python
-from antidot.connector.html import publish_html, publish_html_with_client, html_to_fluid_api
 from fluidtopics.connector import RemoteClient
 
-publish_html(html_path, url, login, password, render_cover_page=True)
-publish_html_with_client(html_path, RemoteClient(url, login, password, source_id), render_cover_page=True)
-publication = html_to_fluid_api(html_path, title, render_cover_page=True)
+from antidot.connector.html import html_to_fluid_api, publish_html, publish_html_with_client
+
+publish_html(
+    "path/to/file.html",
+    "my.fluidtopics.tenant.url",
+    "my@ddress.com",
+    "myStr0ngP@ssword",
+    use_ftml=True
+)
+publish_html_with_client(
+    "path/to/file.html",
+    RemoteClient("my.fluidtopics.tenant.url", "my@ddress.com", "myStr0ngP@ssword", "mySourceID"),
+    use_ftml=True,
+)
+publication = html_to_fluid_api("path/to/file.html", "My title", use_ftml=True)
 ```
 
 For the binary it's `--render-cover-page`.
@@ -149,6 +164,7 @@ list of metadata with the metadatas parameter:
 from datetime import datetime
 
 from fluidtopics.connector import Metadata, RemoteClient
+
 from antidot.connector.html import html_to_fluid_api, publish_html, publish_html_with_client
 
 use_ftml = True
@@ -156,9 +172,22 @@ metadatas = [
     Metadata.string("splitting_algorithm", ["ftml" if use_ftml else "default"]),
     Metadata.last_edition(datetime.now().strftime("%Y-%m-%d")),
 ]
-publish_html(html_path, url, login, password, use_ftml=use_ftml, metadatas=metadatas)
-publish_html_with_client(html_path, RemoteClient(url, login, password, source_id), metadatas, use_ftml)
-publication = html_to_fluid_api(html_path, title, use_ftml=True, metadatas=metadatas)
+publish_html(
+    "path/to/file.html",
+    "my.fluidtopics.tenant.url",
+    "my@ddress.com",
+    "myStr0ngP@ssword",
+    use_ftml=use_ftml,
+    metadatas=metadatas,
+)
+publish_html_with_client(
+    "path/to/file.html",
+    RemoteClient("my.fluidtopics.tenant.url", "my@ddress.com", "myStr0ngP@ssword", "mySourceID"),
+    metadatas,
+    use_ftml,
+)
+publication = html_to_fluid_api("path/to/file.html", "Publication title", use_ftml=True, metadatas=metadatas)
+
 ```
 
 ### Optional FTML splitting algorithm
@@ -176,6 +205,13 @@ If the FTML connector is installed you can then add the `use_ftml` parameter:
 ```python
 from antidot.connector.html import publish_html, publish_html_with_client, html_to_fluid_api
 from fluidtopics.connector import RemoteClient
+
+url = "my.fluidtopics.tenant.url"
+login = "my@ddress.com"
+password = "myStr0ngP@ssword"
+source_id = "MySourceId"
+html_path = "path/to/file.html"
+title = "My Title" 
 
 publish_html(html_path, url, login, password, use_ftml=True)
 publish_html_with_client(html_path, RemoteClient(url, login, password, source_id), use_ftml=True)
