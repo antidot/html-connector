@@ -50,7 +50,7 @@ def run():
         logging.debug("%s launched in verbose mode", HTML_CONNECTOR_SOURCE_ID)
     else:
         logging.basicConfig(level=logging.WARNING)
-    publish_html(args.path, args.url, args.login, args.password, args.use_ftml)
+    publish_html(html_path=args.path, url=args.url, login=args.login, password=args.password, use_ftml=args.use_ftml)
 
 
 def parse_args():
