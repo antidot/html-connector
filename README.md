@@ -42,7 +42,7 @@ it's installed locally, you can use the `--use-ftml` option.
 If you want to send your data directly to FluidTopics:
 
 ```python
-from antidot.connector.html import publish_html, publish_html_with_client
+from antidot.connector.html import publish_html
 
 publish_html(html_path, url, login, password)
 ```
@@ -51,6 +51,7 @@ You can also use a Client object from the fluidtopics package:
 
 ```python
 from fluidtopics.connector import RemoteClient
+from antidot.connector.html import publish_html_with_client
 
 client = RemoteClient(url, login, password, source_id)
 publish_html_with_client(html_path, client=client)
