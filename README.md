@@ -1,9 +1,9 @@
 # HTML connector
 
-This connector permits to import HTML into your FluidTopics instance and
-create the table of content automatically. The content of your HTML file
-should be available on your FluidTopics instance as soon as the content
-processing is finished.
+This connector permits to import HTML into your FluidTopics instance from
+your local computer or anything that can run Python3. It creates the table
+of content automatically from the content of your HTML file. The result should
+be available in FluidTopics as soon as the content processing end.
 
 # Example
 
@@ -13,15 +13,15 @@ You have an HTML file `lorem.html`:
 
 
 And a FluidTopics tenant up and running at "my.fluidtopics.tenant.url".
+You need to have a working python environement locally and to have
+installed the html connector (see "Installing").
 
 ```bash
-# Install the HTML connector (only once)
-pip3 install antidot-html-connector -i https://pypi.mrs.antidot.net/antidot/stable/
 #  Send "lorem.html" to the FT instance
 html2ft lorem.html --url my.fluidtopics.tenant.url --login my@ddress.com --password mypassword
 ```
 
-You can see your imprrt in the content processing:
+You can see your import in the content processing:
 
 ![Content processing](doc/static/lorem_content_processing.png "Content processing")
 
@@ -31,9 +31,22 @@ And your document is uploaded in FluidTopics with a generated table of content:
 
 # Installing
 
+## Client
+
+You need to have a working python3 environment on your machine.
+
+For example, if your on MacOs it means installing pip3 with `brew install pip3`.
+
 ```bash
+pip3 install fluidtopics -U # Necessary because the latest fluidtopics is not on pypi.mrs
 pip3 install antidot-html-connector -i https://pypi.mrs.antidot.net/antidot/stable/
 ```
+
+## FT Server
+
+You need to add the external source with ID = `HTMLConnector`. Please
+make it known here (https://jira.antidot.net/browse/FT-4795)
+if you want to not have to do that.
 
 # Usage
 
