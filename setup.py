@@ -11,7 +11,7 @@ def get_readme():
 
 
 TEST_REQUIRES = ["pytest-cov"]
-VERSION = "0.5.6"
+VERSION = "0.5.7"
 NAME = "antidot-html-connector"
 
 setuptools.setup(
@@ -26,11 +26,11 @@ setuptools.setup(
     classifiers=[
         "Operating System :: OS Independent",
         "Intended Audience :: Developers",
-        "License :: Other/Proprietary License",
+        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Topic :: Documentation",
         "Topic :: Internet :: WWW/HTTP :: Indexing/Search",
     ],
