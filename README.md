@@ -35,12 +35,6 @@ And your document is uploaded in FluidTopics with a generated table of content:
 pip3 install antidot-html-connector -i https://pypi.mrs.antidot.net/antidot/stable/
 ```
 
-If you can and want to use the FTML you also need to install the FTML connector:
-
-```bash
-pip3 install antidot-fluidtopics-ftml-connector -i https://pypi.mrs.antidot.net/antidot/stable/
-```
-
 # Usage
 
 ## Using as a binary
@@ -53,9 +47,6 @@ html2ft path/to/file.html --url my.fluidtopics.tenant.url --login my@ddress.com
 ```
 
 You can add the `--verbose` or `--password myStr0ngP@ssword` options.
-
-If you want to use the FTML connector for splitting your HTML and if
-it's installed locally, you can use the `--use-ftml` option.
 
 ## Using as a library
 
@@ -91,19 +82,6 @@ publication = html_to_fluid_api(html_path, title)
 
 ## Optional arguments
 
-### Optional FTML splitting algorithm
-
-If the FTML connector is installed you can then add the `use_ftml` parameter:
-
-```python
-from antidot.connector.html import publish_html, publish_html_with_client, html_to_fluid_api
-from fluidtopics.connector import RemoteClient
-
-publish_html(html_path, url, login, password, use_ftml=True)
-publish_html_with_client(html_path, RemoteClient(url, login, password, source_id), use_ftml=True)
-publication = html_to_fluid_api(html_path, title, use_ftml=True)
-```
-
 ### Adding metadata
 
 You can also add metadata to the publication. In order to do that give a
@@ -123,6 +101,27 @@ metadatas = [
 publish_html(html_path, url, login, password, use_ftml=use_ftml, metadatas=metadatas)
 publish_html_with_client(html_path, RemoteClient(url, login, password, source_id), metadatas, use_ftml)
 publication = html_to_fluid_api(html_path, title, use_ftml=True, metadatas=metadatas)
+```
+
+### Optional FTML splitting algorithm
+
+If you can and want to use the FTML you also need to install the FTML connector:
+
+```bash
+pip3 install antidot-fluidtopics-ftml-connector -i https://pypi.mrs.antidot.net/antidot/stable/
+```
+
+You can then use the binary with the `--use-ftml` option.
+
+If the FTML connector is installed you can then add the `use_ftml` parameter:
+
+```python
+from antidot.connector.html import publish_html, publish_html_with_client, html_to_fluid_api
+from fluidtopics.connector import RemoteClient
+
+publish_html(html_path, url, login, password, use_ftml=True)
+publish_html_with_client(html_path, RemoteClient(url, login, password, source_id), use_ftml=True)
+publication = html_to_fluid_api(html_path, title, use_ftml=True)
 ```
 
 # Development
