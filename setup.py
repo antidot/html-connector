@@ -5,14 +5,14 @@ import setuptools
 
 def get_readme():
     here = Path(__file__).parent
-    with open(Path(here, "README.md"), "r") as file:
+    with open(str(Path(here, "README.md")), "r") as file:
         content = file.read()
     return content
 
 
 TEST_REQUIRES = ["pytest-cov"]
 SETUPTOOLS = "setuptools~=42.0.2"
-VERSION = "0.2.3"
+VERSION = "0.2.4"
 
 NAME = "antidot-html-connector"
 setuptools.setup(
