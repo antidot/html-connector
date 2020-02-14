@@ -21,12 +21,16 @@ def html_to_fluid_api(html_path: str, title: str, use_ftml: bool, metadatas: [])
     with open(html_path, "r") as html:
         html_content = html.read()
     name = "{}-{}".format(html_path.name, "-".join([str(m) for m in metadatas]))
+    for metadata in metadatas:
+        if metadata.key == "ft:forcedOriginId":
+            name = metadata.first_value
     if use_ftml and not FTML_AVAILABLE:
         raise ModuleNotFoundError("Please install the FTML connector in order to use FTML.")
     if use_ftml:
         content = ftml_split(html_content, title)
     else:
         content = default_split(html_path)
+
     publication_builder = PublicationBuilder().id(name).base_id(name).title(title).content(content)
     for metadata in metadatas:
         publication_builder.add_metadata(metadata)

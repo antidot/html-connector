@@ -23,10 +23,14 @@ def publish_html_with_client(
     if metadatas is None:
         metadatas = []
     title = Path(html_path).name.replace(".html", "")
+    for metadata in metadatas:
+        if metadata.key == "ft:forcedTitle":
+            title = metadata.first_value
     publications = html_to_fluid_api(html_path, title, use_ftml, metadatas)
     response = client.publish(publications)
     if response.status_code == 404 and client._sender.source_id in response.content.decode("utf8"):
         raise ExternalSourceIdDoesNotExistsError(client)
+    return response
 
 
 def publish_html(
@@ -39,7 +43,7 @@ def publish_html(
     metadatas: Optional[list] = None,
 ):  # pylint: disable=too-many-arguments
     client = RemoteClient(url=url, authentication=LoginAuthentication(login, password), source_id=source_id)
-    publish_html_with_client(html_path, client, metadatas, use_ftml)
+    return publish_html_with_client(html_path, client, metadatas, use_ftml)
 
 
 def run():
