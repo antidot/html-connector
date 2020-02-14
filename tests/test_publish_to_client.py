@@ -39,3 +39,4 @@ class TestPublishToClient(unittest.TestCase):
         self.assertIsNotNone(response.publications)
         self.assertEqual(response.publications.id, origin_id)
         self.assertEqual(response.publications.title, title)
+        self.assertIsNone(response.publications.metadata)

@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 from fluidtopics.connector import EditorialType, Metadata, Publication, PublicationBuilder, StructuredContent
@@ -5,6 +6,7 @@ from fluidtopics.connector import EditorialType, Metadata, Publication, Publicat
 from antidot.connector.html.html_splitter_by_header import HtmlSplitterByHeader
 from antidot.connector.html.html_to_topics import HtmlToTopics
 
+LOGGER = logging.getLogger(__name__)
 try:
     # pylint: disable=import-error
     from ftml.builders.topic import TopicBuilder
@@ -21,9 +23,13 @@ def html_to_fluid_api(html_path: str, title: str, use_ftml: bool, metadatas: [])
     with open(html_path, "r") as html:
         html_content = html.read()
     name = "{}-{}".format(html_path.name, "-".join([str(m) for m in metadatas]))
+    new_metadatas = []
     for metadata in metadatas:
         if metadata.key == "ft:forcedOriginId":
+            LOGGER.debug("Forcing the origin ID to '%s'.", metadata.first_value)
             name = metadata.first_value
+        else:
+            new_metadatas.append(metadata)
     if use_ftml and not FTML_AVAILABLE:
         raise ModuleNotFoundError("Please install the FTML connector in order to use FTML.")
     if use_ftml:
@@ -32,7 +38,7 @@ def html_to_fluid_api(html_path: str, title: str, use_ftml: bool, metadatas: [])
         content = default_split(html_path)
 
     publication_builder = PublicationBuilder().id(name).base_id(name).title(title).content(content)
-    for metadata in metadatas:
+    for metadata in new_metadatas:
         publication_builder.add_metadata(metadata)
     publications = publication_builder.build()
     return publications
