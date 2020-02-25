@@ -21,9 +21,9 @@ except ImportError:
 
 def html_to_fluid_api(html_path: str, title: str, use_ftml: bool, metadatas: []) -> Publication:
     if str(html_path).startswith("https:/") or str(html_path).startswith("http:/"):
-        html_content, html_path, name = get_html_from_url(html_path)
+        html_content, name = get_html_from_url(html_path)
     else:
-        html_content, html_path, name = get_html_from_path(html_path, metadatas)
+        html_content, name = get_html_from_path(html_path, metadatas)
     new_metadatas = []
     for metadata in metadatas:
         if metadata.key == "ft:forcedOriginId":
@@ -31,13 +31,7 @@ def html_to_fluid_api(html_path: str, title: str, use_ftml: bool, metadatas: [])
             name = metadata.first_value
         else:
             new_metadatas.append(metadata)
-    if use_ftml and not FTML_AVAILABLE:
-        raise ModuleNotFoundError("Please install the FTML connector in order to use FTML.")
-    if use_ftml:
-        content = ftml_split(html_content, title)
-    else:
-        content = default_split(html_content)
-
+    content = ft_content_from_html_content(html_content, title, use_ftml)
     publication_builder = PublicationBuilder().id(name).base_id(name).title(title).content(content)
     for metadata in new_metadatas:
         publication_builder.add_metadata(metadata)
@@ -45,10 +39,20 @@ def html_to_fluid_api(html_path: str, title: str, use_ftml: bool, metadatas: [])
     return publications
 
 
+def ft_content_from_html_content(html_content, title, use_ftml):
+    if use_ftml and not FTML_AVAILABLE:
+        raise ModuleNotFoundError("Please install the FTML connector in order to use FTML.")
+    if use_ftml:
+        content = ftml_split(html_content, title)
+    else:
+        content = default_split(html_content)
+    return content
+
+
 def get_html_from_url(html_path):
     response = requests.get(html_path)
     response.encoding = "utf-8"
-    return response.text, html_path, html_path
+    return response.text, html_path
 
 
 def get_html_from_path(html_path, metadatas):
@@ -56,7 +60,7 @@ def get_html_from_path(html_path, metadatas):
     with open(html_path, "r") as html:
         html_content = html.read()
     name = "{}-{}".format(html_path.name, "-".join([str(m) for m in metadatas]))
-    return html_content, html_path, name
+    return html_content, name
 
 
 def default_split(html_content):
