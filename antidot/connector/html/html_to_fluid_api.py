@@ -37,7 +37,6 @@ def html_to_fluid_api(html_path: str, title: str, use_ftml: bool, metadatas: [])
         contents[name] = html_content
     publications = []
     for name, content in contents.items():
-        print("adding {} with content {}".format(name, content))
         publication = get_publications_from_content(content, metadatas, name, title, use_ftml)
         publications.append(publication)
     return publications
