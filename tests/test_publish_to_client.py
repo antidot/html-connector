@@ -40,3 +40,10 @@ class TestPublishToClient(unittest.TestCase):
         self.assertEqual(response.publications.id, origin_id)
         self.assertEqual(response.publications.title, title)
         self.assertIsNone(response.publications.metadata)
+
+    @patch("fluidtopics.connector.RemoteClient.publish", mock_publish)
+    def test_publish_url(self):
+        client = RemoteClient(url="url", authentication=LoginAuthentication("login", "password"), source_id="source_id")
+        response = publish_html_with_client("https://fr.wikipedia.org/wiki/Miracle", client)
+        self.assertIsNotNone(response.publications)
+        self.assertIsNone(response.publications.metadata)

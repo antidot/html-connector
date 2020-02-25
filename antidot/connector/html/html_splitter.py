@@ -15,7 +15,10 @@ class BaseHtmlSplitter:
         if content is None and path is None:
             raise ValueError(error_msg.format("at least"))
         if content is not None:
-            self.content = content
+            if isinstance(content, str):
+                self.content = content
+            else:
+                self.content = str(content)
         else:
             with open(path, "r") as html:
                 self.content = html.read()

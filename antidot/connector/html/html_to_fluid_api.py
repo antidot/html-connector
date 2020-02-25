@@ -1,6 +1,7 @@
 import logging
 from pathlib import Path
 
+import requests
 from fluidtopics.connector import EditorialType, Metadata, Publication, PublicationBuilder, StructuredContent
 
 from antidot.connector.html.html_splitter_by_header import HtmlSplitterByHeader
@@ -19,10 +20,11 @@ except ImportError:
 
 
 def html_to_fluid_api(html_path: str, title: str, use_ftml: bool, metadatas: []) -> Publication:
-    html_path = Path(html_path)
-    with open(html_path, "r") as html:
-        html_content = html.read()
-    name = "{}-{}".format(html_path.name, "-".join([str(m) for m in metadatas]))
+    print(html_path)
+    if str(html_path).startswith("https:/") or str(html_path).startswith("http:/"):
+        html_content, html_path, name = get_html_from_url(html_path)
+    else:
+        html_content, html_path, name = get_html_from_path(html_path, metadatas)
     new_metadatas = []
     for metadata in metadatas:
         if metadata.key == "ft:forcedOriginId":
@@ -35,7 +37,7 @@ def html_to_fluid_api(html_path: str, title: str, use_ftml: bool, metadatas: [])
     if use_ftml:
         content = ftml_split(html_content, title)
     else:
-        content = default_split(html_path)
+        content = default_split(html_content)
 
     publication_builder = PublicationBuilder().id(name).base_id(name).title(title).content(content)
     for metadata in new_metadatas:
@@ -44,8 +46,21 @@ def html_to_fluid_api(html_path: str, title: str, use_ftml: bool, metadatas: [])
     return publications
 
 
-def default_split(html_path):
-    splitter = HtmlSplitterByHeader(path=html_path)
+def get_html_from_url(html_path):
+    result = requests.get(html_path)
+    return result.content, html_path, "title"
+
+
+def get_html_from_path(html_path, metadatas):
+    html_path = Path(html_path)
+    with open(html_path, "r") as html:
+        html_content = html.read()
+    name = "{}-{}".format(html_path.name, "-".join([str(m) for m in metadatas]))
+    return html_content, html_path, name
+
+
+def default_split(html_content):
+    splitter = HtmlSplitterByHeader(content=html_content)
     toc_nodes = HtmlToTopics(splitter).topics
     content = StructuredContent(toc=toc_nodes, editorial_type=EditorialType.DEFAULT)
     return content
