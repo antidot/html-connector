@@ -24,6 +24,10 @@ def html_to_fluid_api(html_path: str, title: str, use_ftml: bool, metadatas: [])
         html_content, name = get_html_from_url(html_path)
     else:
         html_content, name = get_html_from_path(html_path, metadatas)
+    return get_publications_from_content(html_content, metadatas, name, title, use_ftml)
+
+
+def get_publications_from_content(html_content, metadatas, name, title, use_ftml):
     new_metadatas = []
     for metadata in metadatas:
         if metadata.key == "ft:forcedOriginId":
