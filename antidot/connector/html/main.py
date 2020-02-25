@@ -30,7 +30,7 @@ def publish_html_with_client(
         else:
             new_metadatas.append(metadata)
     publications = html_to_fluid_api(html_path, title, use_ftml, new_metadatas)
-    response = client.publish(publications)
+    response = client.publish(*publications)
     if response.status_code == 404 and client._sender.source_id in response.content.decode("utf8"):
         raise ExternalSourceIdDoesNotExistsError(client)
     return response

@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 
 import requests
@@ -20,11 +21,26 @@ except ImportError:
 
 
 def html_to_fluid_api(html_path: str, title: str, use_ftml: bool, metadatas: []) -> Publication:
+    contents = {}
     if str(html_path).startswith("https:/") or str(html_path).startswith("http:/"):
         html_content, name = get_html_from_url(html_path)
+        contents[name] = html_content
+    elif Path(html_path).is_dir():
+        for dirpath, _, filenames in os.walk(html_path):
+            for filename in filenames:
+                if filename.endswith(".html") or filename.endswith(".htm"):
+                    html_absolute_path = os.path.join(dirpath, filename)
+                    html_content, name = get_html_from_path(html_absolute_path, metadatas)
+                    contents[name] = html_content
     else:
         html_content, name = get_html_from_path(html_path, metadatas)
-    return get_publications_from_content(html_content, metadatas, name, title, use_ftml)
+        contents[name] = html_content
+    publications = []
+    for name, content in contents.items():
+        print("adding {} with content {}".format(name, content))
+        publication = get_publications_from_content(content, metadatas, name, title, use_ftml)
+        publications.append(publication)
+    return publications
 
 
 def get_publications_from_content(html_content, metadatas, name, title, use_ftml):
