@@ -20,7 +20,6 @@ except ImportError:
 
 
 def html_to_fluid_api(html_path: str, title: str, use_ftml: bool, metadatas: []) -> Publication:
-    print(html_path)
     if str(html_path).startswith("https:/") or str(html_path).startswith("http:/"):
         html_content, html_path, name = get_html_from_url(html_path)
     else:
@@ -47,8 +46,9 @@ def html_to_fluid_api(html_path: str, title: str, use_ftml: bool, metadatas: [])
 
 
 def get_html_from_url(html_path):
-    result = requests.get(html_path)
-    return result.content, html_path, "title"
+    response = requests.get(html_path)
+    response.encoding = "utf-8"
+    return response.text, html_path, "title"
 
 
 def get_html_from_path(html_path, metadatas):

@@ -1,6 +1,5 @@
 class ExternalSourceIdDoesNotExistsError(Exception):
     def __init__(self, client):
-        print(client.__dict__)
         if client._sender.url.endswith("/"):
             url = client._sender.url[:-1]
         url = "{}{}".format(url, "admin/khub/sources/create")
