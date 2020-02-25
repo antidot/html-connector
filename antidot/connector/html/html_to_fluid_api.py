@@ -48,7 +48,7 @@ def html_to_fluid_api(html_path: str, title: str, use_ftml: bool, metadatas: [])
 def get_html_from_url(html_path):
     response = requests.get(html_path)
     response.encoding = "utf-8"
-    return response.text, html_path, "title"
+    return response.text, html_path, html_path
 
 
 def get_html_from_path(html_path, metadatas):
