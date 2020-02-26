@@ -1,0 +1,6 @@
+@font-face {
+  font-family: 'Overpass Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Overpass Mono Regular'), local('OverpassMono-Regular'), url(https://fonts.gstatic.com/l/font?kit=_Xmq-H86tzKDdAPa-KPQZ-AC5i2mqbb1QDobrgJUqCa4OKO4BCp7ffgshEPNomJ6&skey=d1f5d4df18f8b025&v=v5) format('woff2');
+}
