@@ -3,7 +3,6 @@ import logging
 from antidot.connector.html.html_splitter import BaseHtmlSplitter, HtmlSplitter
 
 LOGGER = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
 
 
 class HtmlSplitterByHeader(BaseHtmlSplitter):
