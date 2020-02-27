@@ -45,12 +45,19 @@ def html_to_fluid_api(html_path: str, title: str, use_ftml: bool, metadatas: [])
 
 def get_publications_from_content(html_content, metadatas, name, title, use_ftml):
     new_metadatas = []
+    found_origin_id = False
     for metadata in metadatas:
         if metadata.key == "ft:forcedOriginId":
             LOGGER.debug("Forcing the origin ID to '%s'.", metadata.first_value)
             name = metadata.first_value
+            found_origin_id = True
         else:
             new_metadatas.append(metadata)
+    if logging.WARNING and not found_origin_id:
+        LOGGER.warning(
+            "We used a default origin_id based on the file name and its metadatas."
+            " Sending the same file with the same metadata will replace it."
+        )
     content = ft_content_from_html_content(html_content, title, use_ftml)
     publication_builder = PublicationBuilder().id(name).base_id(name).title(title).content(content)
     for metadata in new_metadatas:
