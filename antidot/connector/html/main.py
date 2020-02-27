@@ -10,7 +10,7 @@ from typing import Optional
 
 from fluidtopics.connector import Client, LoginAuthentication, RemoteClient
 
-from antidot.connector.html.external_source_id_does_not_exists_error import ExternalSourceIdDoesNotExistsError
+from antidot.connector.generic import ExternalSourceIdDoesNotExistsError
 from antidot.connector.html.html_to_fluid_api import html_to_fluid_api
 
 LOGGER = logging.getLogger(__name__)
