@@ -230,3 +230,9 @@ Actual h6 text
         self.assertEqual(splitter.split("h1"), [])
         self.assertEqual(splitter.split("h2"), expected)
         self.assertEqual(splitter.split("h7"), [])
+
+    def test_real_world_split(self):
+        splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("iphone5repare.html"))
+        self.assertEqual(len(splitter.split("h1")), 1)
+        self.assertEqual(len(splitter.split("h2")), 31)
+        self.assertEqual(len(splitter.split("h3")), 40)
