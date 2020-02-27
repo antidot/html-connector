@@ -8,18 +8,16 @@ import logging
 from pathlib import Path
 from typing import Optional
 
-from fluidtopics.connector import Client, LoginAuthentication, RemoteClient
+from fluidtopics.connector import Client
 
-from antidot.connector.generic import ExternalSourceIdDoesNotExistsError
+from antidot.connector.generic.decorators import ClientAuthentication, LoginAndPasswordAuthentication
 from antidot.connector.html.html_to_fluid_api import html_to_fluid_api
 
 LOGGER = logging.getLogger(__name__)
 HTML_CONNECTOR_SOURCE_ID = "HTMLConnector"
 
 
-def publish_html_with_client(
-    html_path: str, client: Client, metadatas: Optional[list] = None, use_ftml: Optional[bool] = False
-):
+def raw_publish_html(html_path: str, use_ftml: Optional[bool] = False, metadatas: Optional[list] = None):
     if metadatas is None:
         metadatas = []
     title = Path(html_path).name.replace(".html", "")
@@ -29,11 +27,14 @@ def publish_html_with_client(
             title = metadata.first_value
         else:
             new_metadatas.append(metadata)
-    publications = html_to_fluid_api(html_path, title, use_ftml, new_metadatas)
-    response = client.publish(*publications)
-    if response.status_code == 404 and client._sender.source_id in response.content.decode("utf8"):
-        raise ExternalSourceIdDoesNotExistsError(client)
-    return response
+    return html_to_fluid_api(html_path, title, use_ftml, new_metadatas)
+
+
+def publish_html_with_client(
+    html_path: str, client: Client, metadatas: Optional[list] = None, use_ftml: Optional[bool] = False
+):
+    function = ClientAuthentication(raw_publish_html, client)
+    return function(html_path=html_path, metadatas=metadatas, use_ftml=use_ftml)
 
 
 def publish_html(
@@ -45,8 +46,9 @@ def publish_html(
     use_ftml: Optional[bool] = False,
     metadatas: Optional[list] = None,
 ):  # pylint: disable=too-many-arguments
-    client = RemoteClient(url=url, authentication=LoginAuthentication(login, password), source_id=source_id)
-    return publish_html_with_client(html_path, client, metadatas, use_ftml)
+    return LoginAndPasswordAuthentication(
+        raw_publish_html, login=login, password=password, url=url, source_id=source_id
+    )(html_path=html_path, metadatas=metadatas, use_ftml=use_ftml)
 
 
 def run():
