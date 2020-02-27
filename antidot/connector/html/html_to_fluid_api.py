@@ -5,6 +5,7 @@ from pathlib import Path
 import requests
 from fluidtopics.connector import EditorialType, Metadata, Publication, PublicationBuilder, StructuredContent
 
+from antidot.connector.generic.constants import ORIGIN_ID_MAX_SIZE
 from antidot.connector.html.html_splitter_by_header import HtmlSplitterByHeader
 from antidot.connector.html.html_to_topics import HtmlToTopics
 
@@ -78,7 +79,10 @@ def get_html_from_path(html_path, metadatas):
     html_path = Path(html_path)
     with open(html_path, "r") as html:
         html_content = html.read()
-    name = "{}-{}".format(html_path.name, "-".join([str(m) for m in metadatas]))
+    name = "{}-{}".format(html_path.name, "-".join(["{}={}".format(m.key, m.values) for m in metadatas]))
+    hash_len = 21
+    if len(name) > ORIGIN_ID_MAX_SIZE:
+        name = "{}{}".format(name[: ORIGIN_ID_MAX_SIZE - hash_len], hash(name[ORIGIN_ID_MAX_SIZE - hash_len :]))
     return html_content, name
 
 
