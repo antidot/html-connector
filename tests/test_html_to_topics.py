@@ -108,6 +108,14 @@ class TestHtmlToTopics(unittest.TestCase):
                 "What we have:\n{}\n\n{}\nWhat we expect:\n{}\n\n".format(part, "-" * 80, expected[i]),
             )
 
+    def test_ressource_creation(self):
+        splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("images.html"))
+        toc_nodes, ressources = HtmlToTopics(splitter).topics
+        self.assertEqual(len(ressources), 0)
+        self.assertEqual(len(toc_nodes), 1)
+        self.assertEqual(len(toc_nodes[0].children), 11)
+        self.assertEqual(toc_nodes[0].children[1].title, "The alt Attribute ")
+
     def test_real_world_example(self):
         splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("iphone5repare.html"))
         toc_nodes, ressources = HtmlToTopics(splitter).topics

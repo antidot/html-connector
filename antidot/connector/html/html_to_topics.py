@@ -1,6 +1,7 @@
 from fluidtopics.connector import PublicationBuilder, ResourceBuilder, UnstructuredContent
 
 from antidot.connector.html.neo_topics import NeoTopic
+from bs4 import BeautifulSoup
 
 
 class HtmlToTopics:
@@ -10,9 +11,14 @@ class HtmlToTopics:
 
     def set_ressource_from_html(self, html):
         """Create the resource and change the HTML to include them. """
-        return html
-
-    def transform_to_fluid_api(self, title, content, children=None):
+        if html is None:
+            return None
+        soup = BeautifulSoup(html, "lxml")
+        imgs = soup.find_all("img")
+        if imgs is None:
+            return html
+        for part in imgs:
+            print(part)
         """resource = (
             ResourceBuilder().resource_id("resource_id").filename("resource.txt").content(b"the UD content").build()
         )
@@ -21,6 +27,10 @@ class HtmlToTopics:
         )
         publication_builder.resource_bank().add(resource)
         self.ressources.append(publication_builder.build())"""
+        return html
+
+    def transform_to_fluid_api(self, title, content, children=None):
+
         content = self.set_ressource_from_html(content)
         if children is None:
             assert isinstance(content, str), "Content related to '%s' should be a string, not None" % title
