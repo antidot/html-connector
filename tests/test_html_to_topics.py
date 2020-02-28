@@ -125,7 +125,7 @@ class TestHtmlToTopics(unittest.TestCase):
     def test_real_world_example(self):
         splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("iphone5repare.html"))
         toc_nodes, resources = HtmlToTopics(splitter).topics
-        self.assertEqual(len(resources), 0)
+        self.assertEqual(len(resources), 4)
         self.assertEqual(len(toc_nodes), 1)
         self.assertEqual(len(toc_nodes[0].children), 31)
         self.assertEqual(toc_nodes[0].children[0].children[0].title, "Outils")

@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-from fluidtopics.connector import PublicationBuilder, ResourceBuilder, UnstructuredContent
+from fluidtopics.connector import ResourceBuilder
 
 from antidot.connector.html.neo_topics import NeoTopic
 from bs4 import BeautifulSoup
@@ -28,27 +28,26 @@ class HtmlToTopics:
             image_path = image.attrs.get("src")
             if image_path is None or self.path is None:
                 continue
-            image_path = Path(self.path).parent.joinpath(image_path)
-            if not image_path.is_file():
+            image_abspath = Path(self.path).parent.joinpath(image_path)
+            if not image_abspath.is_file():
                 continue
-            content = self.__get_content_from_img_src(image_path)
-            self.create_new_resource(content, image_path)
+            content = self.__get_content_from_img_src(image_abspath)
+            if self.resource_already_exists(image_abspath):
+                LOGGER.info("The resource for <%s> already existed.", image_abspath)
+                continue
+            LOGGER.debug("Creating resource for <%s>", image_abspath)
+            resource = (
+                ResourceBuilder().resource_id(str(image_abspath)).filename(str(image_abspath)).content(content).build()
+            )
+            self.resources.append(resource)
+            html = html.replace(image_path, str(image_abspath))
         return html
 
     def resource_already_exists(self, image_path):
         for resource in self.resources:
-            if image_path == resource.filename:
+            if str(image_path) == resource.filename:
                 return True
         return False
-
-    def create_new_resource(self, content, image_path):
-        if self.resource_already_exists(image_path):
-            LOGGER.info("The resource for <%s> already existed.", image_path)
-            return None
-        print("Creating resource : {}".format(image_path))
-        resource = ResourceBuilder().resource_id(image_path).filename(image_path).content(content).build()
-        self.resources.append(resource)
-        return None
 
     @staticmethod
     def __get_content_from_img_src(image_path):

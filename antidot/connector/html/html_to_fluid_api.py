@@ -4,14 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 import requests
-from fluidtopics.connector import (
-    EditorialType,
-    Metadata,
-    Publication,
-    PublicationBuilder,
-    StructuredContent,
-    UnstructuredContent,
-)
+from fluidtopics.connector import EditorialType, Metadata, Publication, PublicationBuilder, StructuredContent
 
 from antidot.connector.generic.constants import ORIGIN_ID_MAX_SIZE
 from antidot.connector.html.html_splitter_by_header import HtmlSplitterByHeader
@@ -91,8 +84,6 @@ def publication_from_html_content(contents, metadatas, title, use_ftml) -> [Publ
             publication_builder.add_metadata(metadata)
         publication = publication_builder.build()
         publications.append(publication)
-        for resource in resources:
-            publications.append(resource)
     return publications
 
 
