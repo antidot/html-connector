@@ -86,9 +86,7 @@ def publication_from_html_content(contents, metadatas, title, use_ftml) -> [Publ
             )
         content, resources = ft_content_from_html_content(content, title, use_ftml, path=path)
         publication_builder = PublicationBuilder().id(name).base_id(name).title(title).content(content)
-        for resource in resources:
-            print(resource)
-            publication_builder.resource_bank().add(resource)
+        publication_builder.resource_bank().add_all(resources)
         for metadata in new_metadatas:
             publication_builder.add_metadata(metadata)
         publication = publication_builder.build()
