@@ -48,6 +48,7 @@ class HtmlToTopics:
         print("Creating resource : {}".format(image_path))
         resource = ResourceBuilder().resource_id(image_path).filename(image_path).content(content).build()
         self.resources.append(resource)
+        return None
 
     def __get_content_from_img_src(self, image_path):
         with open(image_path, "rb") as img:
