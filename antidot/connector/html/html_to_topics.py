@@ -50,7 +50,8 @@ class HtmlToTopics:
         self.resources.append(resource)
         return None
 
-    def __get_content_from_img_src(self, image_path):
+    @staticmethod
+    def __get_content_from_img_src(image_path):
         with open(image_path, "rb") as img:
             content = img.read()
         if str(image_path).startswith("data:"):
