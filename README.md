@@ -83,6 +83,35 @@ client = RemoteClient(url, login, password, source_id)
 publish_html_with_client(html_path, client=client)
 ```
 
+Or make some modification and use a decorator for the connexion:
+
+```python
+from datetime import datetime
+
+from fluidtopics.connector import LoginAuthentication, Metadata, Publication, RemoteClient
+from antidot.connector.generic.decorators import ClientAuthentication, LoginAndPasswordAuthentication
+from antidot.connector.html import html_to_fluid_api
+
+
+@ClientAuthentication(RemoteClient(url, LoginAuthentication(login, password)), source_id))
+def my_html_plugin(html_path) -> list[Publication]:
+    metadatas = [
+        Metadata.last_edition(datetime.now().strftime("%Y-%m-%d")),
+        Metadata.string("uploader", [str(ClientAuthentication)])
+    ]
+    return html_to_fluid_api(html_path=html_path, metadatas=metadatas, use_ftml=True)
+
+@LoginAndPasswordAuthentication(login, password, url, source_id)
+def my_other_html_plugin(html_path) -> list[Publication]:
+    metadatas = [
+        Metadata.last_edition(datetime.now().strftime("%Y-%m-%d")),
+        Metadata.string("uploader", [str(LoginAndPasswordAuthentication)])
+    ]
+    return html_to_fluid_api(html_path=html_path, metadatas=metadatas, use_ftml=True)
+
+
+```
+
 ### Getting the intermediary publications objects
 
 If you want to get the publications from your html file:
