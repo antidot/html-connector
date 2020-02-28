@@ -9,6 +9,7 @@ class BaseHtmlSplitter:
 
     def __init__(self, content=None, path=None, parser="lxml"):
         self.parser = parser
+        self.path = None
         error_msg = "Choose {} one between <content> and <path>."
         if content and path:
             raise ValueError(error_msg.format("only"))
@@ -19,6 +20,7 @@ class BaseHtmlSplitter:
         else:
             with open(path, "r") as html:
                 self.content = html.read()
+            self.path = path
 
 
 class HtmlSplitter(BaseHtmlSplitter):

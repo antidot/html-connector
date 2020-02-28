@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from fluidtopics.connector import PublicationBuilder, ResourceBuilder, UnstructuredContent
 
 from antidot.connector.html.neo_topics import NeoTopic
@@ -6,6 +8,7 @@ from bs4 import BeautifulSoup
 
 class HtmlToTopics:
     def __init__(self, html_splitter):
+        self.path = html_splitter.path
         self.table_of_content = html_splitter.split()
         self.ressources = []
 
@@ -17,17 +20,31 @@ class HtmlToTopics:
         imgs = soup.find_all("img")
         if imgs is None:
             return html
-        for part in imgs:
-            print(part)
-        """resource = (
-            ResourceBuilder().resource_id("resource_id").filename("resource.txt").content(b"the UD content").build()
-        )
-        publication_builder = (
-            PublicationBuilder().id("pub_id").title("UD title").content(UnstructuredContent("resource_id"))
-        )
-        publication_builder.resource_bank().add(resource)
-        self.ressources.append(publication_builder.build())"""
+        for image in imgs:
+            print(image.attrs)
+            image_path = image.attrs.get("src")
+            if image_path is None:
+                continue
+            image_path = Path(self.path).parent.joinpath(image_path)
+            if not image_path.is_file():
+                continue
+            content = self.__get_content_from_img_src(image_path)
+            """resource = (
+                ResourceBuilder().resource_id("resource_id").filename("resource.txt").content(b"the UD content").build()
+            )
+            publication_builder = (
+                PublicationBuilder().id("pub_id").title("UD title").content(UnstructuredContent("resource_id"))
+            )
+            publication_builder.resource_bank().add(resource)
+            self.ressources += publication_builder.build()"""
         return html
+
+    def __get_content_from_img_src(self, image_path):
+        with open(image_path, "rb") as img:
+            content = img.read()
+        if str(image_path).startswith("data:"):
+            content = image_path.split(",")[1]
+        return content
 
     def transform_to_fluid_api(self, title, content, children=None):
         content = self.set_ressources_from_html(content)
