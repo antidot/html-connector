@@ -83,7 +83,18 @@ client = RemoteClient(url, login, password, source_id)
 publish_html_with_client(html_path, client=client)
 ```
 
-Or make some modification and use a decorator for the connexion:
+### Getting the intermediary publications objects
+
+If you want to get the publications from your html file:
+
+```python
+from antidot.connector.html import html_to_fluid_api
+
+publication = html_to_fluid_api(html_path, title)
+```
+
+Using the function that return publications you can use a decorator
+for the connexion:
 
 ```python
 from datetime import datetime
@@ -94,32 +105,22 @@ from antidot.connector.html import html_to_fluid_api
 
 
 @ClientAuthentication(RemoteClient(url, LoginAuthentication(login, password)), source_id))
-def my_html_plugin(html_path) -> list[Publication]:
+def html_to_fluid_api_ftml_plugin(html_path) -> list[Publication]:
     metadatas = [
         Metadata.last_edition(datetime.now().strftime("%Y-%m-%d")),
-        Metadata.string("uploader", [str(ClientAuthentication)])
+        Metadata.string("uploader", ["ClientAuthentication"]),
+        Metadata.string("use_ftml", ["Yes"]),
     ]
     return html_to_fluid_api(html_path=html_path, metadatas=metadatas, use_ftml=True)
 
 @LoginAndPasswordAuthentication(url, login, password, source_id)
-def my_other_html_plugin(html_path) -> list[Publication]:
+def html_to_fluid_api_plugin(html_path) -> list[Publication]:
     metadatas = [
         Metadata.last_edition(datetime.now().strftime("%Y-%m-%d")),
-        Metadata.string("uploader", [str(LoginAndPasswordAuthentication)])
+        Metadata.string("uploader", ["LoginAndPasswordAuthentication"]),
+        Metadata.string("use_ftml", ["No"]),
     ]
-    return html_to_fluid_api(html_path=html_path, metadatas=metadatas, use_ftml=True)
-
-
-```
-
-### Getting the intermediary publications objects
-
-If you want to get the publications from your html file:
-
-```python
-from antidot.connector.html import html_to_fluid_api
-
-publication = html_to_fluid_api(html_path, title)
+    return html_to_fluid_api(html_path=html_path, metadatas=metadatas, use_ftml=False)
 ```
 
 ## Optional arguments
