@@ -113,7 +113,7 @@ class TestHtmlToTopics(unittest.TestCase):
         toc_nodes, ressources = HtmlToTopics(splitter).topics
         self.assertEqual(len(ressources), 0)
         self.assertEqual(len(toc_nodes), 1)
-        self.assertEqual(len(toc_nodes[0].children), 11)
+        self.assertEqual(len(toc_nodes[0].children), 12)
         self.assertEqual(toc_nodes[0].children[1].title, "The alt Attribute ")
 
     def test_real_world_example(self):
