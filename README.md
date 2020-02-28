@@ -101,7 +101,7 @@ def my_html_plugin(html_path) -> list[Publication]:
     ]
     return html_to_fluid_api(html_path=html_path, metadatas=metadatas, use_ftml=True)
 
-@LoginAndPasswordAuthentication(login, password, url, source_id)
+@LoginAndPasswordAuthentication(url, login, password, source_id)
 def my_other_html_plugin(html_path) -> list[Publication]:
     metadatas = [
         Metadata.last_edition(datetime.now().strftime("%Y-%m-%d")),

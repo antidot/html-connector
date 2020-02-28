@@ -17,6 +17,6 @@ class ClientAuthentication:
 
 
 class LoginAndPasswordAuthentication(ClientAuthentication):
-    def __init__(self, function, login, password, url, source_id):
+    def __init__(self, function, url, login, password, source_id):
         client = RemoteClient(url=url, authentication=LoginAuthentication(login, password), source_id=source_id)
         super(LoginAndPasswordAuthentication, self).__init__(function, client)
