@@ -1,11 +1,27 @@
+from fluidtopics.connector import PublicationBuilder, ResourceBuilder, UnstructuredContent
+
 from antidot.connector.html.neo_topics import NeoTopic
 
 
 class HtmlToTopics:
     def __init__(self, html_splitter):
         self.table_of_content = html_splitter.split()
+        self.ressources = []
+
+    def set_ressource_from_html(self, html):
+        """Create the resource and change the HTML to include them. """
+        return html
 
     def transform_to_fluid_api(self, title, content, children=None):
+        """resource = (
+            ResourceBuilder().resource_id("resource_id").filename("resource.txt").content(b"the UD content").build()
+        )
+        publication_builder = (
+            PublicationBuilder().id("pub_id").title("UD title").content(UnstructuredContent("resource_id"))
+        )
+        publication_builder.resource_bank().add(resource)
+        self.ressources.append(publication_builder.build())"""
+        content = self.set_ressource_from_html(content)
         if children is None:
             assert isinstance(content, str), "Content related to '%s' should be a string, not None" % title
             return NeoTopic(title=title, content=content)
@@ -36,4 +52,4 @@ class HtmlToTopics:
                 )
             result.append(self.transform_to_fluid_api(title=title, content=content, children=children))
             # logging.debug("Topics : {}".format(result))
-        return result
+        return result, self.ressources

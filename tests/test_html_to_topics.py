@@ -49,7 +49,7 @@ class TestHtmlToTopics(unittest.TestCase):
 
     def test_heading(self):
         splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("heading.html"))
-        toc_nodes = HtmlToTopics(splitter).topics
+        toc_nodes, ressources = HtmlToTopics(splitter).topics
         expected = [
             NeoTopic(
                 title="My First Heading",
@@ -60,11 +60,12 @@ class TestHtmlToTopics(unittest.TestCase):
 """,
             )
         ]
+        self.assertEqual(len(ressources), 0)
         self.assertEqual(toc_nodes, expected)
 
     def test_heading_three_level(self):
         splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("heading_three_levels.html"))
-        toc_nodes = HtmlToTopics(splitter).topics
+        toc_nodes, ressources = HtmlToTopics(splitter).topics
         expected = [
             NeoTopic(
                 title="Heading 1",
@@ -78,11 +79,12 @@ class TestHtmlToTopics(unittest.TestCase):
                 ],
             )
         ]
+        self.assertEqual(len(ressources), 0)
         self.assertEqual(expected, toc_nodes)
 
     def test_headings(self):
         splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("headings_simple.html"))
-        toc_nodes = HtmlToTopics(splitter).topics
+        toc_nodes, ressources = HtmlToTopics(splitter).topics
         expected = [
             NeoTopic(
                 title="Heading 1",
@@ -98,6 +100,7 @@ class TestHtmlToTopics(unittest.TestCase):
             NeoTopic(title="Heading 1.2", content="\nd\n"),
             NeoTopic(title="Heading 1.3", content="\ne\n", children=[NeoTopic(title="Heading 1.3-2", content="\nf\n")]),
         ]
+        self.assertEqual(len(ressources), 0)
         for i, part in enumerate(toc_nodes):
             self.assertEqual(
                 expected[i],
@@ -107,7 +110,8 @@ class TestHtmlToTopics(unittest.TestCase):
 
     def test_real_world_example(self):
         splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("iphone5repare.html"))
-        toc_nodes = HtmlToTopics(splitter).topics
+        toc_nodes, ressources = HtmlToTopics(splitter).topics
+        self.assertEqual(len(ressources), 0)
         self.assertEqual(len(toc_nodes), 1)
         self.assertEqual(len(toc_nodes[0].children), 31)
         self.assertEqual(toc_nodes[0].children[0].children[0].title, "Outils")

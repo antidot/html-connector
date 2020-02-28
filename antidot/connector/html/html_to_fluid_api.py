@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 import requests
-from fluidtopics.connector import EditorialType, Metadata, PublicationBuilder, StructuredContent
+from fluidtopics.connector import EditorialType, Metadata, Publication, PublicationBuilder, StructuredContent
 
 from antidot.connector.generic.constants import ORIGIN_ID_MAX_SIZE
 from antidot.connector.html.html_splitter_by_header import HtmlSplitterByHeader
@@ -59,7 +59,7 @@ def get_html_content(html_path, metadatas) -> {}:
     return contents
 
 
-def publication_from_html_content(contents, metadatas, title, use_ftml):
+def publication_from_html_content(contents, metadatas, title, use_ftml) -> [Publication]:
     publications = []
     for name, content in contents.items():
         new_metadatas = []
@@ -76,12 +76,14 @@ def publication_from_html_content(contents, metadatas, title, use_ftml):
                 "We used a default origin_id based on the file name and its metadatas."
                 " Sending the same file with the same metadata will replace it."
             )
-        content1 = ft_content_from_html_content(content, title, use_ftml)
-        publication_builder = PublicationBuilder().id(name).base_id(name).title(title).content(content1)
+        content, ressources = ft_content_from_html_content(content, title, use_ftml)
+        publication_builder = PublicationBuilder().id(name).base_id(name).title(title).content(content)
         for metadata in new_metadatas:
             publication_builder.add_metadata(metadata)
         publication = publication_builder.build()
         publications.append(publication)
+        for ressource in ressources:
+            publications.append(ressource)
     return publications
 
 
@@ -93,11 +95,12 @@ def ft_content_from_html_content(html_content, title, use_ftml):
         topics = [TopicsSplitter().split(topic)]
         nodes = PublicationConverter().convert_toc(topics)
         content = StructuredContent(toc=nodes, editorial_type=EditorialType.DEFAULT)
+        ressources = []
     else:
         splitter = HtmlSplitterByHeader(content=html_content)
-        toc_nodes = HtmlToTopics(splitter).topics
+        toc_nodes, ressources = HtmlToTopics(splitter).topics
         content = StructuredContent(toc=toc_nodes, editorial_type=EditorialType.DEFAULT)
-    return content
+    return content, ressources
 
 
 def get_html_from_path(html_path, metadatas):
