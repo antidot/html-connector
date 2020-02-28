@@ -21,7 +21,7 @@ class HtmlToTopics:
         if imgs is None:
             return html
         for image in imgs:
-            print(image.attrs)
+            #  print(image.attrs)
             image_path = image.attrs.get("src")
             if image_path is None:
                 continue
@@ -29,15 +29,27 @@ class HtmlToTopics:
             if not image_path.is_file():
                 continue
             content = self.__get_content_from_img_src(image_path)
-            """resource = (
-                ResourceBuilder().resource_id("resource_id").filename("resource.txt").content(b"the UD content").build()
-            )
-            publication_builder = (
-                PublicationBuilder().id("pub_id").title("UD title").content(UnstructuredContent("resource_id"))
-            )
-            publication_builder.resource_bank().add(resource)
-            self.ressources += publication_builder.build()"""
+            self.create_new_ressource(content, image_path)
         return html
+
+    def ressource_already_exists(self, image_path):
+        for ressource in self.ressources:
+            if image_path == ressource.filename:
+                return True
+        return False
+
+    def create_new_ressource(self, content, image_path):
+        if self.ressource_already_exists(image_path):
+            print("{} already exists".format(image_path))
+            return None
+        print("Creating resource : {}".format(image_path))
+        resource = ResourceBuilder().resource_id(image_path).filename(image_path).content(content).build()
+        self.ressources.append(resource)
+        """        publication_builder = (
+            PublicationBuilder().id("pub_id").title("UD title").content(UnstructuredContent("resource_id"))
+        )
+        publication_builder.resource_bank().add(resource)
+        build = publication_builder.build()"""
 
     def __get_content_from_img_src(self, image_path):
         with open(image_path, "rb") as img:

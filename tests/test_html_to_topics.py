@@ -111,7 +111,7 @@ class TestHtmlToTopics(unittest.TestCase):
     def test_ressource_creation(self):
         splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("images.html"))
         toc_nodes, ressources = HtmlToTopics(splitter).topics
-        self.assertEqual(len(ressources), 0)
+        self.assertEqual(len(ressources), 6)
         self.assertEqual(len(toc_nodes), 1)
         self.assertEqual(len(toc_nodes[0].children), 12)
         self.assertEqual(toc_nodes[0].children[1].title, "The alt Attribute ")
