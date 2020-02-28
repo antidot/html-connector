@@ -5,7 +5,6 @@ Permit to take an HTML document, split it according to its headers, and push it 
 import argparse
 import getpass
 import logging
-from pathlib import Path
 from typing import Optional
 
 from fluidtopics.connector import Client
@@ -17,24 +16,10 @@ LOGGER = logging.getLogger(__name__)
 HTML_CONNECTOR_SOURCE_ID = "HTMLConnector"
 
 
-def raw_publish_html(html_path: str, use_ftml: Optional[bool] = False, metadatas: Optional[list] = None):
-    if metadatas is None:
-        metadatas = []
-    title = Path(html_path).name.replace(".html", "")
-    new_metadatas = []
-    for metadata in metadatas:
-        if metadata.key == "ft:forcedTitle":
-            title = metadata.first_value
-        else:
-            new_metadatas.append(metadata)
-    return html_to_fluid_api(html_path, title, use_ftml, new_metadatas)
-
-
 def publish_html_with_client(
     html_path: str, client: Client, metadatas: Optional[list] = None, use_ftml: Optional[bool] = False
 ):
-    function = ClientAuthentication(raw_publish_html, client)
-    return function(html_path=html_path, metadatas=metadatas, use_ftml=use_ftml)
+    return ClientAuthentication(html_to_fluid_api, client)(html_path=html_path, metadatas=metadatas, use_ftml=use_ftml)
 
 
 def publish_html(
@@ -47,7 +32,7 @@ def publish_html(
     metadatas: Optional[list] = None,
 ):  # pylint: disable=too-many-arguments
     return LoginAndPasswordAuthentication(
-        raw_publish_html, login=login, password=password, url=url, source_id=source_id
+        html_to_fluid_api, login=login, password=password, url=url, source_id=source_id
     )(html_path=html_path, metadatas=metadatas, use_ftml=use_ftml)
 
 
