@@ -84,17 +84,17 @@ def publication_from_html_content(contents, metadatas, title, use_ftml) -> [Publ
                 "We used a default origin_id based on the file name and its metadatas."
                 " Sending the same file with the same metadata will replace it."
             )
-        content, ressources = ft_content_from_html_content(content, title, use_ftml, path=path)
+        content, resources = ft_content_from_html_content(content, title, use_ftml, path=path)
         publication_builder = PublicationBuilder().id(name).base_id(name).title(title).content(content)
-        for ressource in ressources:
-            print(ressource)
-            publication_builder.resource_bank().add(ressource)
+        for resource in resources:
+            print(resource)
+            publication_builder.resource_bank().add(resource)
         for metadata in new_metadatas:
             publication_builder.add_metadata(metadata)
         publication = publication_builder.build()
         publications.append(publication)
-        for ressource in ressources:
-            publications.append(ressource)
+        for resource in resources:
+            publications.append(resource)
     return publications
 
 
@@ -106,15 +106,15 @@ def ft_content_from_html_content(html_content, title, use_ftml, path):
         topics = [TopicsSplitter().split(topic)]
         nodes = PublicationConverter().convert_toc(topics)
         content = StructuredContent(toc=nodes, editorial_type=EditorialType.DEFAULT)
-        ressources = []
+        resources = []
     else:
         if path:
             splitter = HtmlSplitterByHeader(path=path)
         else:
             splitter = HtmlSplitterByHeader(content=html_content)
-        toc_nodes, ressources = HtmlToTopics(splitter).topics
+        toc_nodes, resources = HtmlToTopics(splitter).topics
         content = StructuredContent(toc=toc_nodes, editorial_type=EditorialType.DEFAULT)
-    return content, ressources
+    return content, resources
 
 
 def get_html_from_path(html_path, metadatas):

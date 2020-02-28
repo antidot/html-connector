@@ -13,9 +13,9 @@ class HtmlToTopics:
     def __init__(self, html_splitter):
         self.path = html_splitter.path
         self.table_of_content = html_splitter.split()
-        self.ressources = []
+        self.resources = []
 
-    def set_ressources_from_html(self, html):
+    def set_resources_from_html(self, html):
         """Create the resource and change the HTML to include them. """
         if html is None:
             return None
@@ -32,22 +32,22 @@ class HtmlToTopics:
             if not image_path.is_file():
                 continue
             content = self.__get_content_from_img_src(image_path)
-            self.create_new_ressource(content, image_path)
+            self.create_new_resource(content, image_path)
         return html
 
-    def ressource_already_exists(self, image_path):
-        for ressource in self.ressources:
-            if image_path == ressource.filename:
+    def resource_already_exists(self, image_path):
+        for resource in self.resources:
+            if image_path == resource.filename:
                 return True
         return False
 
-    def create_new_ressource(self, content, image_path):
-        if self.ressource_already_exists(image_path):
-            LOGGER.info("The ressource for <{}> already existed.".format(image_path))
+    def create_new_resource(self, content, image_path):
+        if self.resource_already_exists(image_path):
+            LOGGER.info("The resource for <{}> already existed.".format(image_path))
             return None
         print("Creating resource : {}".format(image_path))
         resource = ResourceBuilder().resource_id(image_path).filename(image_path).content(content).build()
-        self.ressources.append(resource)
+        self.resources.append(resource)
 
     def __get_content_from_img_src(self, image_path):
         with open(image_path, "rb") as img:
@@ -57,7 +57,7 @@ class HtmlToTopics:
         return content
 
     def transform_to_fluid_api(self, title, content, children=None):
-        content = self.set_ressources_from_html(content)
+        content = self.set_resources_from_html(content)
         if children is None:
             assert isinstance(content, str), "Content related to '%s' should be a string, not None" % title
             return NeoTopic(title=title, content=content)
@@ -88,4 +88,4 @@ class HtmlToTopics:
                 )
             result.append(self.transform_to_fluid_api(title=title, content=content, children=children))
             # logging.debug("Topics : {}".format(result))
-        return result, self.ressources
+        return result, self.resources
