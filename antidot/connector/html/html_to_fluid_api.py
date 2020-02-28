@@ -51,24 +51,25 @@ def get_html_content(html_path, metadatas) -> {}:
     if is_an_url:
         response = requests.get(html_path)
         response.encoding = "utf-8"
-        contents[html_path] = response.text
+        contents[html_path] = [response.text, False]
     elif is_dir:
         for dirpath, _, filenames in os.walk(html_path):
             for filename in filenames:
                 if filename.endswith(".html") or filename.endswith(".htm"):
                     html_absolute_path = os.path.join(dirpath, filename)
                     html_content, name = get_html_from_path(html_absolute_path, metadatas)
-                    contents[name] = html_content
+                    contents[name] = [html_content, html_absolute_path]
     else:
         # Is a file
         html_content, name = get_html_from_path(html_path, metadatas)
-        contents[name] = html_content
+        contents[name] = [html_content, html_path]
     return contents
 
 
 def publication_from_html_content(contents, metadatas, title, use_ftml) -> [Publication]:
     publications = []
-    for name, content in contents.items():
+    for name, content_and_path in contents.items():
+        content, path = content_and_path[0], content_and_path[1]
         new_metadatas = []
         found_origin_id = False
         for metadata in metadatas:
@@ -83,9 +84,10 @@ def publication_from_html_content(contents, metadatas, title, use_ftml) -> [Publ
                 "We used a default origin_id based on the file name and its metadatas."
                 " Sending the same file with the same metadata will replace it."
             )
-        content, ressources = ft_content_from_html_content(content, title, use_ftml)
+        content, ressources = ft_content_from_html_content(content, title, use_ftml, path=path)
         publication_builder = PublicationBuilder().id(name).base_id(name).title(title).content(content)
         for ressource in ressources:
+            print(ressource)
             publication_builder.resource_bank().add(ressource)
         for metadata in new_metadatas:
             publication_builder.add_metadata(metadata)
@@ -96,7 +98,7 @@ def publication_from_html_content(contents, metadatas, title, use_ftml) -> [Publ
     return publications
 
 
-def ft_content_from_html_content(html_content, title, use_ftml):
+def ft_content_from_html_content(html_content, title, use_ftml, path):
     if use_ftml and not FTML_AVAILABLE:
         raise ModuleNotFoundError("Please install the FTML connector in order to use FTML.")
     if use_ftml:
@@ -106,7 +108,10 @@ def ft_content_from_html_content(html_content, title, use_ftml):
         content = StructuredContent(toc=nodes, editorial_type=EditorialType.DEFAULT)
         ressources = []
     else:
-        splitter = HtmlSplitterByHeader(content=html_content)
+        if path:
+            splitter = HtmlSplitterByHeader(path=path)
+        else:
+            splitter = HtmlSplitterByHeader(content=html_content)
         toc_nodes, ressources = HtmlToTopics(splitter).topics
         content = StructuredContent(toc=toc_nodes, editorial_type=EditorialType.DEFAULT)
     return content, ressources

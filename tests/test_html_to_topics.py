@@ -15,6 +15,8 @@ class TestHtmlToTopics(unittest.TestCase):
     def test_broken_toc(self):
         # pylint: disable=expression-not-assigned,no-self-use
         class WorstSplitter:
+            path = ""
+
             def split(self):
                 return [{"title": "This won't work, we need the content and header_type keys"}]
 
@@ -25,6 +27,8 @@ class TestHtmlToTopics(unittest.TestCase):
         title = "Content can't be None"
 
         class WorseSplitter:
+            path = ""
+
             def split(self):
                 return [{"content": None, "header_type": "h1", "title": title}]
 
@@ -33,6 +37,8 @@ class TestHtmlToTopics(unittest.TestCase):
         self.assertIn("Content related to '{}' should be a string".format(title), str(rte.exception))
 
         class BadSplitter:
+            path = ""
+
             def split(self):
                 return [
                     {
