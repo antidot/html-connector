@@ -43,7 +43,7 @@ class HtmlToTopics:
 
     def create_new_resource(self, content, image_path):
         if self.resource_already_exists(image_path):
-            LOGGER.info("The resource for <{}> already existed.".format(image_path))
+            LOGGER.info("The resource for <%s> already existed.", image_path)
             return None
         print("Creating resource : {}".format(image_path))
         resource = ResourceBuilder().resource_id(image_path).filename(image_path).content(content).build()
