@@ -1,9 +1,12 @@
+import logging
 from pathlib import Path
 
 from fluidtopics.connector import PublicationBuilder, ResourceBuilder, UnstructuredContent
 
 from antidot.connector.html.neo_topics import NeoTopic
 from bs4 import BeautifulSoup
+
+LOGGER = logging.getLogger(__name__)
 
 
 class HtmlToTopics:
@@ -23,7 +26,7 @@ class HtmlToTopics:
         for image in imgs:
             #  print(image.attrs)
             image_path = image.attrs.get("src")
-            if image_path is None:
+            if image_path is None or self.path is None:
                 continue
             image_path = Path(self.path).parent.joinpath(image_path)
             if not image_path.is_file():
@@ -40,16 +43,11 @@ class HtmlToTopics:
 
     def create_new_ressource(self, content, image_path):
         if self.ressource_already_exists(image_path):
-            print("{} already exists".format(image_path))
+            LOGGER.info("The ressource for <{}> already existed.".format(image_path))
             return None
         print("Creating resource : {}".format(image_path))
         resource = ResourceBuilder().resource_id(image_path).filename(image_path).content(content).build()
         self.ressources.append(resource)
-        """        publication_builder = (
-            PublicationBuilder().id("pub_id").title("UD title").content(UnstructuredContent("resource_id"))
-        )
-        publication_builder.resource_bank().add(resource)
-        build = publication_builder.build()"""
 
     def __get_content_from_img_src(self, image_path):
         with open(image_path, "rb") as img:
