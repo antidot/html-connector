@@ -1,10 +1,10 @@
 import logging
 from pathlib import Path
 
+from bs4 import BeautifulSoup
 from fluidtopics.connector import ResourceBuilder
 
 from antidot.connector.html.neo_topics import NeoTopic
-from bs4 import BeautifulSoup
 
 LOGGER = logging.getLogger(__name__)
 
