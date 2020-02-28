@@ -30,7 +30,9 @@ class HtmlToTopics:
                 continue
             image_abspath = Path(self.path).parent.joinpath(image_path)
             if not image_abspath.is_file():
-                if not str(image_path).startswith("http"):
+                src = str(image_path)
+                normal_cases = ["https://", "http://", "data:"]
+                if not any([src.startswith(n) for n in normal_cases]):
                     LOGGER.warning("We did not find <%s> locally", image_path)
                 continue
             content = self.__get_content_from_img_src(image_abspath)
