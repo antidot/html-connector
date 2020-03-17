@@ -110,7 +110,8 @@ def get_html_from_path(html_path, metadatas):
     html_path = Path(html_path)
     with open(html_path, "r") as html:
         html_content = html.read()
-    name = "{}-{}".format(html_path.name, "-".join(["{}={}".format(m.key, m.values) for m in metadatas]))
+    metadatas_name = "-".join(["{}={}".format(m.key, m.values) for m in metadatas if m.key not in ["script"]])
+    name = "{}-{}".format(html_path.name, metadatas_name)
     hash_len = 21
     if len(name) > ORIGIN_ID_MAX_SIZE:
         name = "{}{}".format(name[: ORIGIN_ID_MAX_SIZE - hash_len], hash(name[ORIGIN_ID_MAX_SIZE - hash_len :]))
