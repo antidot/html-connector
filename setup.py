@@ -10,11 +10,11 @@ def get_readme():
     return content
 
 
+SETUP_REQUIRES = ["setuptools~=46.0.0"]
 TEST_REQUIRES = ["pytest-cov"]
-SETUPTOOLS = "setuptools~=42.0.2"
-VERSION = "0.4.1"
-
+VERSION = "0.4.2"
 NAME = "antidot-html-connector"
+
 setuptools.setup(
     name=NAME,
     description="HTML connector to FluidTopics",
@@ -38,9 +38,9 @@ setuptools.setup(
     packages=setuptools.find_namespace_packages(),
     package_dir={},
     install_requires=["beautifulsoup4", "fluidtopics>=0.2.0"],
-    setup_requires=[SETUPTOOLS],
+    setup_requires=SETUP_REQUIRES,
     tests_require=TEST_REQUIRES,
-    extras_require={"test": TEST_REQUIRES, "setup": [SETUPTOOLS]},
+    extras_require={"test": TEST_REQUIRES, "setup": SETUP_REQUIRES},
     url="https://scm.mrs.antidot.net/antidot/html-connector",
     zip_safe=True,
 )
