@@ -39,11 +39,14 @@ def publish_html(
 def run():
     """Try to send an html file to the fluid api."""
     args = parse_args()
-    if args.verbose:
+    if args.verbose == 0:
+        logging.basicConfig(level=logging.WARNING)
+    elif args.verbose == 1:
+        logging.basicConfig(level=logging.INFO)
+        logging.info("%s launched in semi-verbose mode", HTML_CONNECTOR_SOURCE_ID)
+    elif args.verbose > 1:
         logging.basicConfig(level=logging.DEBUG)
         logging.debug("%s launched in verbose mode", HTML_CONNECTOR_SOURCE_ID)
-    else:
-        logging.basicConfig(level=logging.WARNING)
     publish_html(html_path=args.path, url=args.url, login=args.login, password=args.password, use_ftml=args.use_ftml)
 
 
@@ -60,7 +63,7 @@ def parse_args():
         action="store_true",
         default=False,
     )
-    parser.add_argument("--verbose", help="Verbosity of the logging", action="store_true", default=False)
+    parser.add_argument("-v", "--verbose", action="count", default=0)
     args = parser.parse_args()
     if not args.password:
         args.password = getpass.getpass(
