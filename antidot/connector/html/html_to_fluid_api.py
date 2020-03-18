@@ -1,8 +1,10 @@
 import logging
 import os
+import sys
 from pathlib import Path
 from typing import Optional
 
+import pkg_resources
 import requests
 from fluidtopics.connector import EditorialType, Metadata, Publication, PublicationBuilder, StructuredContent
 
@@ -63,15 +65,8 @@ def publication_from_html_content(contents, metadatas, title, use_ftml) -> [Publ
     publications = []
     for name, content_and_path in contents.items():
         content, path = content_and_path[0], content_and_path[1]
-        new_metadatas = []
         found_origin_id = False
-        for metadata in metadatas:
-            if metadata.key == "ft:forcedOriginId":
-                LOGGER.debug("Forcing the origin ID to '%s'.", metadata.first_value)
-                name = metadata.first_value
-                found_origin_id = True
-            else:
-                new_metadatas.append(metadata)
+        found_origin_id, name, new_metadatas = treat_metadatas(found_origin_id, metadatas, name)
         if logging.WARNING and not found_origin_id:
             LOGGER.warning(
                 "We used a default origin_id based on the file name and its metadatas."
@@ -85,6 +80,25 @@ def publication_from_html_content(contents, metadatas, title, use_ftml) -> [Publ
         publication = publication_builder.build()
         publications.append(publication)
     return publications
+
+
+def treat_metadatas(found_origin_id, metadatas, name):
+    new_metadatas = []
+    for metadata in metadatas:
+        if metadata.key == "ft:forcedOriginId":
+            LOGGER.debug("Forcing the origin ID to '%s'.", metadata.first_value)
+            name = metadata.first_value
+            found_origin_id = True
+        else:
+            if metadata.key == "script":
+                script_name = "{}-{}-{}".format(
+                    sys.argv[0].split("/")[-1],
+                    "antidot-html-connector",
+                    pkg_resources.get_distribution("antidot-html-connector").version,
+                )
+                metadata.values.add((script_name,))
+            new_metadatas.append(metadata)
+    return found_origin_id, name, new_metadatas
 
 
 def ft_content_from_html_content(html_content, title, use_ftml, path):
