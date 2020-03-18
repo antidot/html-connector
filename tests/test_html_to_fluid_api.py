@@ -6,7 +6,7 @@ import pkg_resources
 from fluidtopics.connector import Metadata
 
 from antidot.connector.generic.constants import ORIGIN_ID_MAX_SIZE
-from antidot.connector.html.html_to_fluid_api import get_html_from_path, treat_metadatas
+from antidot.connector.html.html_to_fluid_api import get_html_content, get_html_from_path, treat_metadatas
 
 
 class TestHtmlToFluidApi(unittest.TestCase):
@@ -19,6 +19,10 @@ class TestHtmlToFluidApi(unittest.TestCase):
         self.assertLess(len(name), ORIGIN_ID_MAX_SIZE)
         _, other_name = get_html_from_path(Path(__file__), metadatas[:-1])
         self.assertNotEqual(name, other_name, "Different metadatas, same origin id !")
+
+    def test_get_html_content(self):
+        contents = get_html_content(Path(__file__).parent.joinpath("fixtures/"), [])
+        self.assertEqual(len(contents.keys()), 18)
 
     def test_excluded_metadata_name(self):
         """We can change the script metadata without affecting the default name created from metadata"""
