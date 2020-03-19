@@ -1,6 +1,5 @@
 import logging
 import os
-import sys
 from pathlib import Path
 from typing import Optional
 
@@ -65,13 +64,7 @@ def publication_from_html_content(contents, metadatas, title, use_ftml) -> [Publ
     publications = []
     for name, content_and_path in contents.items():
         content, path = content_and_path[0], content_and_path[1]
-        found_origin_id = False
-        found_origin_id, name, new_metadatas = treat_metadatas(found_origin_id, metadatas, name)
-        if logging.WARNING and not found_origin_id:
-            LOGGER.warning(
-                "We used a default origin_id based on the file name and its metadatas."
-                " Sending the same file with the same metadata will replace it."
-            )
+        name, new_metadatas = treat_metadatas(name, metadatas)
         content, resources = ft_content_from_html_content(content, title, use_ftml, path=path)
         publication_builder = PublicationBuilder().id(name).base_id(name).title(title).content(content)
         publication_builder.resource_bank().add_all(resources)
@@ -82,7 +75,8 @@ def publication_from_html_content(contents, metadatas, title, use_ftml) -> [Publ
     return publications
 
 
-def treat_metadatas(found_origin_id, metadatas, name):
+def treat_metadatas(name, metadatas):
+    found_origin_id = False
     new_metadatas = []
     for metadata in metadatas:
         if metadata.key == "ft:forcedOriginId":
@@ -96,7 +90,12 @@ def treat_metadatas(found_origin_id, metadatas, name):
                 )
                 metadata = Metadata.string(METADATA_SCRIPT, ["{}-{}".format(metadata.first_value, script_name)])
             new_metadatas.append(metadata)
-    return found_origin_id, name, new_metadatas
+    if logging.WARNING and not found_origin_id:
+        LOGGER.warning(
+            "We used a default origin_id based on the file name and its metadatas."
+            " Sending the same file with the same metadata will replace it."
+        )
+    return name, new_metadatas
 
 
 def ft_content_from_html_content(html_content, title, use_ftml, path):

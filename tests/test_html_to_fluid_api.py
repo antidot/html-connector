@@ -43,16 +43,14 @@ class TestHtmlToFluidApi(unittest.TestCase):
 
         forced_name = "This is the forced origin_id"
         metadatas = [Metadata.string("script", ["this test script"])]
-        found_origin_id, new_name, new_metadatas = treat_metadatas(False, metadatas, "name")
+        new_name, new_metadatas = treat_metadatas("name", metadatas)
         self.assertEqual("name", new_name)
         expected_metadatas = [
             Metadata.string("script", {"this test script-antidot-html-connector-{}".format(connector_version)})
         ]
         self.assertEqual(new_metadatas, expected_metadatas)
-        self.assertFalse(found_origin_id)
         metadatas.append(Metadata.string("ft:forcedOriginId", [forced_name]))
-        found_origin_id, new_name, new_metadatas = treat_metadatas(False, metadatas, "name")
+        new_name, new_metadatas = treat_metadatas("name", metadatas)
         self.assertEqual(forced_name, new_name)
         self.assertEqual(new_metadatas, expected_metadatas)
-        self.assertTrue(found_origin_id)
         sys.argv = temp
