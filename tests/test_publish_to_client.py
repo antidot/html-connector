@@ -17,6 +17,7 @@ class MockResponse:
 
 
 def mock_publish(self, publications):
+    # pylint: disable=unused-argument
     return MockResponse(publications)
 
 
@@ -26,7 +27,7 @@ class TestPublishToClient(unittest.TestCase):
         client = RemoteClient(url="url", authentication=LoginAuthentication("login", "password"), source_id="source_id")
         response = publish_html_with_client(HTML_PATHS[0], client)
         self.assertIsNotNone(response.publications)
-        self.assertEqual(response.publications.id, "heading.html-")
+        self.assertEqual(response.publications.id, "heading.html")
         self.assertEqual(response.publications.title, "heading")
 
     @patch("fluidtopics.connector.RemoteClient.publish", mock_publish)

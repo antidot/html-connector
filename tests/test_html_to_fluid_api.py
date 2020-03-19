@@ -8,6 +8,8 @@ from fluidtopics.connector import Metadata
 from antidot.connector.generic.constants import ORIGIN_ID_MAX_SIZE
 from antidot.connector.html.html_to_fluid_api import get_html_content, get_html_from_path, treat_metadatas
 
+from .test_main import HTML_NAMES
+
 
 class TestHtmlToFluidApi(unittest.TestCase):
     def test_get_html_from_path(self):
@@ -22,7 +24,8 @@ class TestHtmlToFluidApi(unittest.TestCase):
 
     def test_get_html_content(self):
         contents = get_html_content(Path(__file__).parent.joinpath("fixtures/"), [])
-        self.assertEqual(len(contents.keys()), 18)
+        for name in HTML_NAMES:
+            self.assertIn(name, contents.keys())
 
     def test_excluded_metadata_name(self):
         """We can change the script metadata without affecting the default name created from metadata"""
