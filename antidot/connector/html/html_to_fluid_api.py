@@ -77,6 +77,10 @@ def publication_from_html_content(contents, metadatas, title, use_ftml) -> [Publ
 
 def treat_metadatas(name, metadatas):
     found_origin_id = False
+    found_script = False
+    script_name = "{}-{}".format(
+        "antidot-html-connector", pkg_resources.get_distribution("antidot-html-connector").version
+    )
     new_metadatas = []
     for metadata in metadatas:
         if metadata.key == "ft:forcedOriginId":
@@ -85,11 +89,11 @@ def treat_metadatas(name, metadatas):
             found_origin_id = True
         else:
             if metadata.key == METADATA_SCRIPT:
-                script_name = "{}-{}".format(
-                    "antidot-html-connector", pkg_resources.get_distribution("antidot-html-connector").version
-                )
+                found_script = True
                 metadata = Metadata.string(METADATA_SCRIPT, ["{}-{}".format(metadata.first_value, script_name)])
             new_metadatas.append(metadata)
+    if not found_script:
+        new_metadatas.append(Metadata.string(METADATA_SCRIPT, [script_name]))
     if logging.WARNING and not found_origin_id:
         LOGGER.warning(
             "We used a default origin_id based on the file name and its metadatas."
