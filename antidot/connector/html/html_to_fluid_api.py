@@ -8,7 +8,7 @@ import pkg_resources
 import requests
 from fluidtopics.connector import EditorialType, Metadata, Publication, PublicationBuilder, StructuredContent
 
-from antidot.connector.generic.constants import ORIGIN_ID_MAX_SIZE
+from antidot.connector.generic.constants import METADATA_SCRIPT, ORIGIN_ID_MAX_SIZE
 from antidot.connector.html.html_splitter_by_header import HtmlSplitterByHeader
 from antidot.connector.html.html_to_topics import HtmlToTopics
 
@@ -90,13 +90,11 @@ def treat_metadatas(found_origin_id, metadatas, name):
             name = metadata.first_value
             found_origin_id = True
         else:
-            if metadata.key == "script":
-                script_name = "{}-{}-{}".format(
-                    sys.argv[0].split("/")[-1],
-                    "antidot-html-connector",
-                    pkg_resources.get_distribution("antidot-html-connector").version,
+            if metadata.key == METADATA_SCRIPT:
+                script_name = "{}-{}".format(
+                    "antidot-html-connector", pkg_resources.get_distribution("antidot-html-connector").version
                 )
-                metadata.values.add((script_name,))
+                metadata = Metadata.string(METADATA_SCRIPT, ["{}-{}".format(metadata.first_value, script_name)])
             new_metadatas.append(metadata)
     return found_origin_id, name, new_metadatas
 

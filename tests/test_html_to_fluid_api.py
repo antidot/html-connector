@@ -39,16 +39,14 @@ class TestHtmlToFluidApi(unittest.TestCase):
         temp = sys.argv
         script_name = "script_name"
         sys.argv = [script_name, "myhtml.html"]
-        connector_version = (pkg_resources.get_distribution("antidot-html-connector").version,)
+        connector_version = pkg_resources.get_distribution("antidot-html-connector").version
 
         forced_name = "This is the forced origin_id"
         metadatas = [Metadata.string("script", ["this test script"])]
         found_origin_id, new_name, new_metadatas = treat_metadatas(False, metadatas, "name")
         self.assertEqual("name", new_name)
         expected_metadatas = [
-            Metadata.string(
-                "script", {"this test script", "{}-antidot-html-connector-{}".format(script_name, connector_version[0])}
-            )
+            Metadata.string("script", {"this test script-antidot-html-connector-{}".format(connector_version)})
         ]
         self.assertEqual(new_metadatas, expected_metadatas)
         self.assertFalse(found_origin_id)
