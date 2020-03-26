@@ -3,6 +3,8 @@ from pathlib import Path
 
 from antidot.connector.html.html_splitter_by_header import HtmlSplitterByHeader
 
+from .common import EXPECTED_TABLES_HEADER
+
 HERE = Path(__file__).parent
 FIXTURE_DIR = Path(HERE).joinpath("fixtures")
 
@@ -78,76 +80,7 @@ class TestHtmlSplitterByHeader(unittest.TestCase):
 
     def test_table_split(self):
         splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("tables.html"))
-        expected = [
-            {
-                "content": """
-
-<p>HTML tables start with a table tag.</p>
-<p>Table rows start with a tr tag.</p>
-<p>Table data start with a td tag.</p>
-
-<hr>
-""",
-                "header_type": "h2",
-                "title": "HTML Tables",
-            },
-            {
-                "content": """
-
-<table>
-  <tr>
-    <td>100</td>
-  </tr>
-</table>
-
-<hr>
-""",
-                "header_type": "h2",
-                "title": "1 Column:",
-            },
-            {
-                "content": """
-<table>
-  <tr>
-    <td>100</td>
-    <td>200</td>
-    <td>300</td>
-  </tr>
-</table>
-
-<hr>
-""",
-                "header_type": "h2",
-                "title": "1 Row and 3 Columns:",
-            },
-            {
-                "content": """
-<table>
-  <tr>
-    <td>100</td>
-    <td>200</td>
-    <td>300</td>
-  </tr>
-  <tr>
-    <td>400</td>
-    <td>500</td>
-    <td>600</td>
-  </tr>
-  <tr>
-    <td>700</td>
-    <td>800</td>
-    <td>900</td>
-  </tr>
-</table>
-
-<hr>
-
-""",
-                "header_type": "h2",
-                "title": "3 Rows and 3 Columns:",
-            },
-        ]
-        self.assertEqual(splitter.split(), expected)
+        self.assertEqual(splitter.split(), EXPECTED_TABLES_HEADER)
 
     def test_split_example(self):
         splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("example.html"))

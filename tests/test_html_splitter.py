@@ -3,6 +3,8 @@ from pathlib import Path
 
 from antidot.connector.html.html_splitter import HtmlSplitter
 
+from .common import EXPECTED_TABLES
+
 HERE = Path(__file__).parent
 FIXTURE_DIR = Path(HERE).joinpath("fixtures")
 
@@ -160,75 +162,10 @@ Actual h6 text
             splitter = HtmlSplitter(test_value["content"])
             self.assertEqual(splitter.split("h2"), h2_expected)
 
-    def test_complicated_split(self):
+    def test_tables(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("tables.html"))
-        expected = [
-            {
-                "title": "HTML Tables",
-                "content": """
-
-<p>HTML tables start with a table tag.</p>
-<p>Table rows start with a tr tag.</p>
-<p>Table data start with a td tag.</p>
-
-<hr>
-""",
-            },
-            {
-                "title": "1 Column:",
-                "content": """
-
-<table>
-  <tr>
-    <td>100</td>
-  </tr>
-</table>
-
-<hr>
-""",
-            },
-            {
-                "title": "1 Row and 3 Columns:",
-                "content": """
-<table>
-  <tr>
-    <td>100</td>
-    <td>200</td>
-    <td>300</td>
-  </tr>
-</table>
-
-<hr>
-""",
-            },
-            {
-                "title": "3 Rows and 3 Columns:",
-                "content": """
-<table>
-  <tr>
-    <td>100</td>
-    <td>200</td>
-    <td>300</td>
-  </tr>
-  <tr>
-    <td>400</td>
-    <td>500</td>
-    <td>600</td>
-  </tr>
-  <tr>
-    <td>700</td>
-    <td>800</td>
-    <td>900</td>
-  </tr>
-</table>
-
-<hr>
-
-""",
-            },
-        ]
         self.assertEqual(splitter.split("h1"), [])
-        self.assertEqual(splitter.split("h2"), expected)
+        self.assertEqual(splitter.split("h2"), EXPECTED_TABLES)
         self.assertEqual(splitter.split("h7"), [])
 
     def test_real_world_split(self):
