@@ -117,7 +117,7 @@ class TestHtmlToTopics(unittest.TestCase):
     def test_empty_title(self):
         splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("empty_title.html"))
         toc_nodes, resources = HtmlToTopics(splitter).topics
-        expected = [NeoTopic(title="Installation", content="\n    a\n  ")]
+        expected = [NeoTopic(title="Installation", content="\n    a\n    \n    b\n  ")]
         self.assertEqual(len(resources), 0)
         self.assertEqual(toc_nodes, expected)
 
