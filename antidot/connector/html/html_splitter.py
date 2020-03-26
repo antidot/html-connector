@@ -32,13 +32,15 @@ class HtmlSplitter(BaseHtmlSplitter):
         split_content = self.content.split("</{}>".format(tag))
         for i, header in enumerate(body_bs4.find_all(tag)):
             # logging.debug("Tag='{}' header='{}'".format(tag, header))
-            element = {"title": BeautifulSoup("".join([str(h) for h in header.contents]), self.parser).get_text()}
+            title = BeautifulSoup("".join([str(h) for h in header.contents]), self.parser).get_text()
+            if not title:
+                continue
             # Cut after the closing tag
             content = split_content[i + 1]
             # Cut before the next opening tag
             content = content.split("<{}".format(tag))[0]
             if "</body>" in content:
                 content = content.split("</body>")[0]
-            element["content"] = content
+            element = {"title": title, "content": content}
             result.append(element)
         return result
