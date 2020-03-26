@@ -201,9 +201,9 @@ class TestHtmlSplitterByHeader(unittest.TestCase):
 
     def test_real_world_example(self):
         splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("iphone5repare.html"))
-        h1 = splitter.split()[0]
-        self.assertEqual(h1.get("title"), "Comment remplacer la batterie de l'iPhone 5s")
-        self.assertEqual(h1.get("header_type"), "h1")
-        h2s = h1.get("children")
-        self.assertEqual(len(h2s), 31)
-        self.assertEqual(h2s[3].get("title"), "\nÉtape 2\n\n")
+        first_h1 = splitter.split()[0]
+        self.assertEqual(first_h1.get("title"), "Comment remplacer la batterie de l'iPhone 5s")
+        self.assertEqual(first_h1.get("header_type"), "h1")
+        h2s_of_first_h1 = first_h1.get("children")
+        self.assertEqual(len(h2s_of_first_h1), 31)
+        self.assertEqual(h2s_of_first_h1[3].get("title"), "\nÉtape 2\n\n")
