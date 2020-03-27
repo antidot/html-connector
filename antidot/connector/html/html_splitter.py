@@ -50,7 +50,7 @@ class HtmlSplitter(BaseHtmlSplitter):
         split_content = self.get_split_content(parsed_html)
         result = self.create_proper_list(split_content)
         hierarchized_content = self.__get_hierarchized_content(result)
-        return hierarchized_content[1:]
+        return hierarchized_content
 
     def create_proper_list(self, split_content):
         result = []
