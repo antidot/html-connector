@@ -28,6 +28,14 @@ class TestHtmlSplitterByHeader(unittest.TestCase):
         ]
         self.assertEqual(splitter.split(), expected)
 
+    def test_empty_title(self):
+        splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("empty_title.html"))
+        expected = [
+            {"content": "\n    a\n    \n    b\n\n    ", "header_type": "h1", "title": "Installation"},
+            {"title": "Removal", "content": "\n    c\n    \n    d\n  ", "header_type": "h1"},
+        ]
+        self.assertEqual(splitter.split(), expected)
+
     def test_simple_headings(self):
         splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("standard_headings.html"))
         expected = [

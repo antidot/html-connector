@@ -114,6 +114,16 @@ class TestHtmlToTopics(unittest.TestCase):
                 "What we have:\n{}\n\n{}\nWhat we expect:\n{}\n\n".format(part, "-" * 80, expected[i]),
             )
 
+    def test_empty_title(self):
+        splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("empty_title.html"))
+        toc_nodes, resources = HtmlToTopics(splitter).topics
+        expected = [
+            NeoTopic(title="Installation", content="\n    a\n    \n    b\n\n    "),
+            NeoTopic(title="Removal", content="\n    c\n    \n    d\n  "),
+        ]
+        self.assertEqual(len(resources), 0)
+        self.assertEqual(toc_nodes, expected)
+
     def test_resource_creation(self):
         splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("images.html"))
         toc_nodes, resources = HtmlToTopics(splitter).topics
