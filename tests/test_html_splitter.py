@@ -45,7 +45,10 @@ class TestHtmlSplitter(unittest.TestCase):
 
     def test_empty_title(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("empty_title.html"))
-        expected = [{"title": "Installation", "content": "\n    a\n    \n    b\n  "}]
+        expected = [
+            {"title": "Installation", "content": "\n    a\n    \n    b\n\n    "},
+            {"title": "Removal", "content": "\n    c\n    \n    d\n  "},
+        ]
         self.assertEqual(splitter.split("h1"), expected)
 
     def test_simple_split(self):
