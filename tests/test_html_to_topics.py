@@ -57,6 +57,7 @@ class TestHtmlToTopics(unittest.TestCase):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("heading.html"))
         toc_nodes, resources = HtmlToTopics(splitter).topics
         expected = [
+            NeoTopic(title="Cover Page", content="\n\nIntroduction\n\n"),
             NeoTopic(
                 title="My First Heading",
                 content="""
@@ -64,7 +65,7 @@ class TestHtmlToTopics(unittest.TestCase):
 <p>My first paragraph.</p>
 
 """,
-            )
+            ),
         ]
         self.assertEqual(len(resources), 0)
         self.assertEqual(toc_nodes, expected)
@@ -73,6 +74,7 @@ class TestHtmlToTopics(unittest.TestCase):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("heading_three_levels.html"))
         toc_nodes, resources = HtmlToTopics(splitter).topics
         expected = [
+            NeoTopic(title="Cover Page", content="\n\nIntroduction\n\n"),
             NeoTopic(
                 title="Heading 1",
                 content="\na\n",
@@ -83,7 +85,7 @@ class TestHtmlToTopics(unittest.TestCase):
                         children=[NeoTopic(title="Heading 1-2-3", content="\nc\n")],
                     )
                 ],
-            )
+            ),
         ]
         self.assertEqual(len(resources), 0)
         self.assertEqual(expected, toc_nodes)
@@ -92,14 +94,13 @@ class TestHtmlToTopics(unittest.TestCase):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("headings_simple.html"))
         toc_nodes, resources = HtmlToTopics(splitter).topics
         expected = [
+            NeoTopic(title="Cover Page", content="z"),
             NeoTopic(
                 title="Heading 1",
                 content="\na\n",
                 children=[
                     NeoTopic(
-                        title="Heading 1-2",
-                        content="\nb\n",
-                        children=[NeoTopic(title="Heading 1-2-3", content="\nc\n")],
+                        title="Heading 1-2", content="\nb\n", children=[NeoTopic(title="Heading 1-2-3", content="c")]
                     )
                 ],
             ),
@@ -118,6 +119,9 @@ class TestHtmlToTopics(unittest.TestCase):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("empty_title.html"))
         toc_nodes, resources = HtmlToTopics(splitter).topics
         expected = [
+            NeoTopic(
+                title="Cover Page", content="\n\nIntroduction\n\n    \nText that should be in the introduction.\n\n    "
+            ),
             NeoTopic(title="Installation", content="\n    a\n    \n    b\n\n    "),
             NeoTopic(title="Removal", content="\n    c\n    \n    d\n  "),
         ]
@@ -128,14 +132,28 @@ class TestHtmlToTopics(unittest.TestCase):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("images.html"))
         toc_nodes, resources = HtmlToTopics(splitter).topics
         self.assertEqual(len(resources), 6)
-        self.assertEqual(len(toc_nodes), 1)
-        self.assertEqual(len(toc_nodes[0].children), 12)
-        self.assertEqual(toc_nodes[0].children[1].title, "The alt Attribute ")
+        self.assertEqual(len(toc_nodes), 2)
+        self.assertEqual(len(toc_nodes[1].children), 12)
+        self.assertEqual(toc_nodes[1].children[1].title, "The alt Attribute ")
 
     def test_real_world_example(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("iphone5repare.html"))
         toc_nodes, resources = HtmlToTopics(splitter).topics
         self.assertEqual(len(resources), 14)
-        self.assertEqual(len(toc_nodes), 1)
-        self.assertEqual(toc_nodes[0].title, "Comment remplacer la batterie de l'iPhone 5s")
-        self.assertEqual(len(toc_nodes[0].children), 32)
+        self.assertEqual(len(toc_nodes), 2)
+        self.assertEqual(toc_nodes[1].title, "Comment remplacer la batterie de l'iPhone 5s")
+        self.assertEqual(len(toc_nodes[1].children), 32)
+        tool = toc_nodes[0].children[19]
+        self.assertEqual(tool.title, "Outils")
+        self.assertEqual(
+            repr(tool),
+            """<Topic>
+    Title:
+        Outils
+    Content:
+        <div><div class="sc-lkqHmb fRhhEx"></div></div>
+    Children:
+        []
+</Topic>
+""",
+        )

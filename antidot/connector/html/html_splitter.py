@@ -23,13 +23,20 @@ class BaseHtmlSplitter:
         re_search = BaseHtmlSplitter.INTERNAL_BODY_FINDER.search(html)
         if re_search:
             return re_search.group(1)
-        opening_body = "<body" in html
-        closing_body = "</body" in html
-        if opening_body:
-            without_body = "<body".join(html.split("<body")[1:])
-            html = ">".join(without_body.split(">")[1:])
-        if closing_body:
-            html = "</body".join(html.split("</body")[0:-1])
+        html = BaseHtmlSplitter.trim_tag(html, "body")
+        return BaseHtmlSplitter.trim_tag(html, "html")
+
+    @staticmethod
+    def trim_tag(html, tag):
+        end_tag = "</{}".format(tag)
+        tag = "<{}".format(tag)
+        opening_tag = tag in html
+        closing_tag = end_tag in html
+        if opening_tag:
+            without_tag = tag.join(html.split(tag)[1:])
+            html = ">".join(without_tag.split(">")[1:])
+        if closing_tag:
+            html = end_tag.join(html.split(end_tag)[0:-1])
         return html
 
     def __init__(self, content=None, path=None, parser="lxml"):
@@ -57,7 +64,7 @@ class HtmlSplitter(BaseHtmlSplitter):
         split_content = self.get_split_content(parsed_html)
         result = self.create_proper_list(split_content)
         hierarchized_content = self.__get_hierarchized_content(result)
-        return hierarchized_content[1:]
+        return hierarchized_content
 
     def create_proper_list(self, split_content):
         result = []

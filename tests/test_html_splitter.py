@@ -32,22 +32,28 @@ class TestHtmlSplitter(unittest.TestCase):
     def test_simple_split(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("heading.html"))
         expected = [
-            {
-                "title": "My First Heading",
-                "header_type": "h1",
-                "content": """
-
-<p>My first paragraph.</p>
-
-""",
-            }
+            {"content": "\n\nIntroduction\n\n", "header_type": "h1", "title": "Cover Page"},
+            {"title": "My First Heading", "header_type": "h1", "content": "\n\n<p>My first paragraph.</p>\n\n"},
         ]
         self.assertEqual(splitter.split(), expected)
 
     def test_empty_title(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("empty_title.html"))
         expected = [
-            {"content": "\n    a\n    \n    b\n\n    ", "header_type": "h1", "title": "Installation"},
+            {
+                "content": "\n"
+                "\n"
+                "Introduction\n"
+                "\n"
+                "    \n"
+                "\n"
+                "Text that should be in the introduction.\n"
+                "\n"
+                "    ",
+                "header_type": "h1",
+                "title": "Cover Page",
+            },
+            {"title": "Installation", "content": "\n    a\n    \n    b\n\n    ", "header_type": "h1"},
             {"title": "Removal", "content": "\n    c\n    \n    d\n  ", "header_type": "h1"},
         ]
         self.assertEqual(splitter.split(), expected)
@@ -55,6 +61,7 @@ class TestHtmlSplitter(unittest.TestCase):
     def test_simple_headings(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("standard_headings.html"))
         expected = [
+            {"content": "\n\nIntroduction text document.\n\n", "title": "Cover Page", "header_type": "h1"},
             {
                 "content": "\n\nIntroduction text 1a\n\n",
                 "children": [
@@ -79,6 +86,7 @@ class TestHtmlSplitter(unittest.TestCase):
     def test_simple_split_with_text(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("headings_simple.html"))
         expected = [
+            {"content": "\nz\n", "header_type": "h1", "title": "Cover Page"},
             {
                 "content": "\na\n",
                 "children": [
@@ -134,7 +142,7 @@ class TestHtmlSplitter(unittest.TestCase):
 """,
             "header_type": "h1",
         }
-        self.assertEqual(splitter.split()[0], expected)
+        self.assertEqual(splitter.split()[1], expected)
 
     def test_disgusting_mammoth_output(self):
         h1_title = (
@@ -146,42 +154,43 @@ class TestHtmlSplitter(unittest.TestCase):
             '<a id="_Toc315192141"></a><a id="_Toc424140849"></a>Analoge Ausgänge'
         )
         expected = [
+            {"content": "", "header_type": "h1", "title": "Cover Page"},
             {
                 "content": "",
                 "children": [{"content": "", "header_type": "h2", "title": "Stellsignal stetig (AO 0-10V)"}],
                 "header_type": "h1",
                 "title": "Analoge Ausgänge",
-            }
+            },
         ]
         headers = HtmlSplitter("<h1>%s</h1><h2>%s</h2>" % (h2_title, h1_title)).split()
         self.assertEqual(headers, expected)
 
     def test_malformed(self):
         expected = [
+            {"content": "\nIntroduction\n\n", "header_type": "h3", "title": "Cover Page"},
             {
                 "title": "Heading 3",
                 "header_type": "h3",
                 "content": "\na\n",
                 "children": [{"title": "Heading 6", "header_type": "h6", "content": "\nb\n"}],
-            }
+            },
         ]
         for file in ["malformed.html", "malformed2.html"]:
             headers = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath(file)).split()
-            self.assertEqual(headers, expected)
-        expected = [
-            {
-                "title": "Heading 3",
-                "header_type": "h3",
-                "content": '\na\n</body class="page-background">\n<h6>Heading 6</h6>\nb\n',
-            }
-        ]
+            self.assertEqual(headers, expected, "In {}".format(file))
+        expected[1]["content"] = '\na\n</body class="page-background">\n<h6>Heading 6</h6>\nb\n'
+        del expected[1]["children"]
         headers = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("malformed3.html")).split()
         self.assertEqual(headers, expected)
 
     def test_convoluted(self):
         headers = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("convoluted_javascripted.html")).split()
         expected = [
+            {"content": "\n\n", "header_type": "h1", "title": "Cover Page"},
             {
+                "title": "Problem description",
+                "header_type": "h1",
+                "content": "\n\nThe problem is that poeple create shitty base HTML.\n\n",
                 "children": [
                     {
                         "content": "\n\nThen they format it properly...\n\n",
@@ -194,9 +203,6 @@ class TestHtmlSplitter(unittest.TestCase):
                         "title": "...with semantic HTML ?",
                     },
                 ],
-                "content": "\n\nThe problem is that poeple create shitty base HTML.\n\n",
-                "header_type": "h1",
-                "title": "Problem description",
             },
             {"title": "Result", "header_type": "h1", "content": "\n\nWell shit goes in, shit comes out !\n\n"},
         ]
@@ -205,8 +211,8 @@ class TestHtmlSplitter(unittest.TestCase):
     def test_real_world_example(self):
         headers = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("iphone5repare.html")).split()
         h1s = [h for h in headers if h["header_type"] == "h1"]
-        self.assertEqual(len(h1s), 1)
-        h2s = h1s[0]["children"]
+        self.assertEqual(len(h1s), 2)
+        h2s = h1s[1]["children"]
         h3s = []
         number_of_h2 = 0
         number_of_h2_children = 0

@@ -12,6 +12,7 @@ class NeoTopic(TocNode):
                 raise TypeError(error_msg.format(title, content, child, type(child)))
         if not isinstance(content, str):
             raise TypeError("'content' should be a str but is a {} : {}".format(type(content), content))
+        content = " ".join(content.split())
         hashed_id = hash(title + content)
         super(NeoTopic, self).__init__(
             Topic(id=hashed_id, title=title, body=Body("<div>{}</div>".format(content)), *args, **kwargs),

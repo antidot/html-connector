@@ -1,6 +1,7 @@
 from antidot.connector.html.html_splitter import BaseHtmlSplitter
 
 EXPECTED_TABLES = [
+    {"title": "Cover Page", "content": "\n\nExample taken on w3c website.\n\n"},
     {
         "title": "HTML Tables",
         "content": """
