@@ -39,7 +39,7 @@ class HtmlSplitter(BaseHtmlSplitter):
         for i, header in enumerate(body_bs4.find_all(tag)):
             # LOGGER.debug("Tag='%s' i='%s' header='%s', table_of_content='%s'", tag, i, header, table_of_content)
             title = BeautifulSoup("".join([str(h) for h in header.contents]), self.parser).get_text()
-            content = self.get_raw_content(i, split_content, tag)
+            content = self.get_raw_content(split_content[i + 1], tag)
             if not title and i != 0:
                 missed_content += 1
                 table_of_content[i - missed_content][1] += content
@@ -54,11 +54,9 @@ class HtmlSplitter(BaseHtmlSplitter):
         return result
 
     @staticmethod
-    def get_raw_content(i, split_content, tag):
-        # Cut after the closing tag
-        content = split_content[i + 1]
+    def get_raw_content(content_after_closing_tag, tag):
         # Cut before the next opening tag
-        content = content.split("<{}".format(tag))[0]
-        if "</body>" in content:
-            content = content.split("</body>")[0]
-        return content
+        content_after_closing_tag = content_after_closing_tag.split("<{}".format(tag))[0]
+        if "</body>" in content_after_closing_tag:
+            content_after_closing_tag = content_after_closing_tag.split("</body>")[0]
+        return content_after_closing_tag
