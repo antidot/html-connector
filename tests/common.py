@@ -1,3 +1,5 @@
+from antidot.connector.html.html_splitter import BaseHtmlSplitter
+
 EXPECTED_TABLES = [
     {
         "title": "HTML Tables",
@@ -77,3 +79,7 @@ def get_table_with_headers():
 
 
 EXPECTED_TABLES_HEADER = get_table_with_headers()
+
+
+def normalize_html(html):
+    return BaseHtmlSplitter.normalize_html(html)

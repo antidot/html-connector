@@ -11,6 +11,10 @@ class BaseHtmlSplitter:
     Permit to split an HTML file or string
     """
 
+    @staticmethod
+    def normalize_html(html):
+        return BeautifulSoup(html, "html.parser").prettify()
+
     def __init__(self, content=None, path=None, parser="lxml"):
         self.parser = parser
         self.path = None
