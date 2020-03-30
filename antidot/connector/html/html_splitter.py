@@ -1,4 +1,5 @@
 import logging
+import re
 
 from bs4 import BeautifulSoup
 
@@ -11,9 +12,18 @@ class BaseHtmlSplitter:
     Permit to split an HTML file or string
     """
 
+    INTERNAL_BODY_FINDER = re.compile(r"<body>([\s\S]+?)<\/body>")
+
     @staticmethod
     def normalize_html(html):
         return BeautifulSoup(html, "html.parser").prettify()
+
+    @staticmethod
+    def get_html_between_body(html):
+        re_search = BaseHtmlSplitter.INTERNAL_BODY_FINDER.search(html)
+        if re_search:
+            return re_search.group(1)
+        return html
 
     def __init__(self, content=None, path=None, parser="lxml"):
         self.parser = parser
@@ -24,10 +34,10 @@ class BaseHtmlSplitter:
         if content is None and path is None:
             raise ValueError(error_msg.format("at least"))
         if content is not None:
-            self.content = content
+            self.content = self.get_html_between_body(content)
         else:
             with open(path, "r") as html:
-                self.content = html.read()
+                self.content = self.get_html_between_body(html.read())
             self.path = path
 
 
