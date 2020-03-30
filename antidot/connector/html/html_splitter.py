@@ -12,7 +12,7 @@ class BaseHtmlSplitter:
     Permit to split an HTML file or string
     """
 
-    INTERNAL_BODY_FINDER = re.compile(r"<body>([\s\S]+?)<\/body>")
+    INTERNAL_BODY_FINDER = re.compile(r"<body[a-zA-Z\-=\"\ ]*>([\s\S]+?)<\/body>")
 
     @staticmethod
     def normalize_html(html):
