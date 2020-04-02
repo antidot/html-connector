@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-from antidot.connector.html.html_splitter_by_header import HtmlSplitterByHeader
+from antidot.connector.html.html_splitter import HtmlSplitter
 from antidot.connector.html.html_to_topics import HtmlToTopics, NeoTopic
 
 HERE = Path(__file__).parent
@@ -54,7 +54,7 @@ class TestHtmlToTopics(unittest.TestCase):
         self.assertIn("Expected a dict", str(rte.exception))
 
     def test_heading(self):
-        splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("heading.html"))
+        splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("heading.html"))
         toc_nodes, resources = HtmlToTopics(splitter).topics
         expected = [
             NeoTopic(
@@ -70,7 +70,7 @@ class TestHtmlToTopics(unittest.TestCase):
         self.assertEqual(toc_nodes, expected)
 
     def test_heading_three_level(self):
-        splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("heading_three_levels.html"))
+        splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("heading_three_levels.html"))
         toc_nodes, resources = HtmlToTopics(splitter).topics
         expected = [
             NeoTopic(
@@ -89,7 +89,7 @@ class TestHtmlToTopics(unittest.TestCase):
         self.assertEqual(expected, toc_nodes)
 
     def test_headings(self):
-        splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("headings_simple.html"))
+        splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("headings_simple.html"))
         toc_nodes, resources = HtmlToTopics(splitter).topics
         expected = [
             NeoTopic(
@@ -115,7 +115,7 @@ class TestHtmlToTopics(unittest.TestCase):
             )
 
     def test_empty_title(self):
-        splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("empty_title.html"))
+        splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("empty_title.html"))
         toc_nodes, resources = HtmlToTopics(splitter).topics
         expected = [
             NeoTopic(title="Installation", content="\n    a\n    \n    b\n\n    "),
@@ -125,7 +125,7 @@ class TestHtmlToTopics(unittest.TestCase):
         self.assertEqual(toc_nodes, expected)
 
     def test_resource_creation(self):
-        splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("images.html"))
+        splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("images.html"))
         toc_nodes, resources = HtmlToTopics(splitter).topics
         self.assertEqual(len(resources), 6)
         self.assertEqual(len(toc_nodes), 1)
@@ -133,9 +133,9 @@ class TestHtmlToTopics(unittest.TestCase):
         self.assertEqual(toc_nodes[0].children[1].title, "The alt Attribute ")
 
     def test_real_world_example(self):
-        splitter = HtmlSplitterByHeader(path=Path(FIXTURE_DIR).joinpath("iphone5repare.html"))
+        splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("iphone5repare.html"))
         toc_nodes, resources = HtmlToTopics(splitter).topics
-        self.assertEqual(len(resources), 4)
+        self.assertEqual(len(resources), 14)
         self.assertEqual(len(toc_nodes), 1)
-        self.assertEqual(len(toc_nodes[0].children), 31)
-        self.assertEqual(toc_nodes[0].children[0].children[0].title, "Outils")
+        self.assertEqual(toc_nodes[0].title, "Comment remplacer la batterie de l'iPhone 5s")
+        self.assertEqual(len(toc_nodes[0].children), 32)
