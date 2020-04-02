@@ -40,10 +40,14 @@ class TestHtmlToFluidApi(unittest.TestCase):
             self.assertIn(name, contents.keys())
 
     def test_excluded_metadata_name(self):
-        """We can change the script metadata without affecting the default name created from metadata"""
-        _, name = get_html_from_path(Path(__file__), self.metadatas)
+        """We can change metadata without affecting the default name created from metadata"""
+        ignored_metadatas = [
+            Metadata.string(METADATA_SCRIPT, ["this test script"]),
+            Metadata.string("style-map-hash", [hash("STYLE_MAP")]),
+        ]
+        _, name = get_html_from_path(Path(__file__), ignored_metadatas)
         _, other_name = get_html_from_path(Path(__file__), [])
-        self.assertEqual(name, other_name, "The script metadata should not affect the name!")
+        self.assertEqual(name, other_name, "The ignored metadata should not affect the name!")
 
     def test_no_metadata_script(self):
         """We add script metadata when there is nothing."""

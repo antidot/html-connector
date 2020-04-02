@@ -23,6 +23,9 @@ except ImportError:
     FTML_AVAILABLE = False
 
 
+METADATA_NOT_AFFECTING_ORIGIN_ID = ["script", "style-map-hash"]
+
+
 def html_to_fluid_api(html_path: str, use_ftml: Optional[bool] = False, metadatas: Optional[list] = None):
     if metadatas is None:
         metadatas = []
@@ -125,7 +128,9 @@ def get_html_from_path(html_path, metadatas):
     html_path = Path(html_path)
     with open(html_path, "r") as html:
         html_content = html.read()
-    metadatas_name = "-".join(["{}={}".format(m.key, m.values) for m in metadatas if m.key not in ["script"]])
+    metadatas_name = "-".join(
+        ["{}={}".format(m.key, m.values) for m in metadatas if m.key not in METADATA_NOT_AFFECTING_ORIGIN_ID]
+    )
     if metadatas_name:
         name = "{}-{}".format(html_path.name, metadatas_name)
     else:
