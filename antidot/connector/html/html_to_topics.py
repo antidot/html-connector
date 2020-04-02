@@ -64,7 +64,10 @@ class HtmlToTopics:
     def transform_to_fluid_api(self, title, content, children=None):
         content = self.set_resources_from_html(content)
         if children is None:
-            assert isinstance(content, str), "Content related to '%s' should be a string, not None" % title
+            assert isinstance(content, str), "Content related to '%s' should be a string, not %s" % (
+                title,
+                content.__class__,
+            )
             return NeoTopic(title=title, content=content)
         fluid_children = []
         for child in children:
