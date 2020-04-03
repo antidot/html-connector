@@ -33,13 +33,11 @@ class BaseHtmlSplitter:
             raise ValueError(error_msg.format("only"))
         if content is None and path is None:
             raise ValueError(error_msg.format("at least"))
-        if content is not None:
-            self.content = self.get_html_between_body(content)
-        else:
+        if content is None:
             with open(path, "r") as html:
-                self.content = self.get_html_between_body(html.read())
+                content = html.read()
             self.path = path
-
+        self.content = self.get_html_between_body(content)
 
 class HtmlSplitter(BaseHtmlSplitter):
     def split(self, tag):
