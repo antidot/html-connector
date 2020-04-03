@@ -156,9 +156,33 @@ class TestHtmlSplitter(unittest.TestCase):
         ]
         self.assertEqual(splitter.split(), expected)
 
-    def test_real_world_example(self):
-        splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("iphone5repare.html"))
+    def test_convoluted(self):
+        splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("convoluted_javascripted.html"))
         headers = splitter.split()
+        expected = [
+            {
+                "children": [
+                    {
+                        "content": "\n\nThen they format it properly...\n\n",
+                        "header_type": "h4",
+                        "title": "What is wrong... ",
+                    },
+                    {
+                        "content": "\n\n... with javascript and CSS.\n\n",
+                        "header_type": "h3",
+                        "title": "...with semantic HTML ?",
+                    },
+                ],
+                "content": "\n\nThe problem is that poeple create shitty base HTML.\n\n",
+                "header_type": "h1",
+                "title": "Problem description",
+            },
+            {"title": "Result", "header_type": "h1", "content": "\n\nWell shit goes in, shit comes out !\n\n"},
+        ]
+        self.assertEqual(headers, expected)
+
+    def test_real_world_example(self):
+        headers = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("iphone5repare.html")).split()
         h1s = [h for h in headers if h["header_type"] == "h1"]
         self.assertEqual(len(h1s), 1)
         h2s = h1s[0]["children"]
