@@ -1,6 +1,10 @@
 import unittest
+from pathlib import Path
 
 from antidot.connector.html.html_splitter import BaseHtmlSplitter
+
+HERE = Path(__file__).parent
+FIXTURE_DIR = Path(HERE).joinpath("fixtures")
 
 
 class TestBaseHtmlSplitter(unittest.TestCase):
@@ -42,3 +46,7 @@ Paragraph text 1a-2a
 Paragraph text 1a-2b
 """
         self.assertEqual(BaseHtmlSplitter.normalize_html(html), expected)
+
+    def test_cut_body(self):
+        splitter = BaseHtmlSplitter(path=Path(FIXTURE_DIR).joinpath("headings.html"))
+        self.assertNotIn("body", splitter.content)
