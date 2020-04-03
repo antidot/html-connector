@@ -154,13 +154,12 @@ class TestHtmlSplitter(unittest.TestCase):
             '<a id="_Toc315192141"></a><a id="_Toc424140849"></a>Analoge Ausgänge'
         )
         expected = [
-            {"content": "", "header_type": "h1", "title": "Cover Page"},
             {
                 "content": "",
                 "children": [{"content": "", "header_type": "h2", "title": "Stellsignal stetig (AO 0-10V)"}],
                 "header_type": "h1",
                 "title": "Analoge Ausgänge",
-            },
+            }
         ]
         headers = HtmlSplitter("<h1>%s</h1><h2>%s</h2>" % (h2_title, h1_title)).split()
         self.assertEqual(headers, expected)
@@ -186,7 +185,6 @@ class TestHtmlSplitter(unittest.TestCase):
     def test_convoluted(self):
         headers = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("convoluted_javascripted.html")).split()
         expected = [
-            {"content": "\n\n", "header_type": "h1", "title": "Cover Page"},
             {
                 "title": "Problem description",
                 "header_type": "h1",

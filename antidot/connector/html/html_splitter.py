@@ -71,7 +71,8 @@ class HtmlSplitter(BaseHtmlSplitter):
         headers = set(c["header_type"] for c in self.__iter_on_split_content(split_content))
         higest_level_header = "h1" if not headers else min(headers)
         cover_page = split_content[0]
-        result.append({"title": "Cover Page", "header_type": higest_level_header, "content": cover_page})
+        if " ".join(cover_page.split()):
+            result.append({"title": "Cover Page", "header_type": higest_level_header, "content": cover_page})
         for title_header_content in self.__iter_on_split_content(split_content):
             result.append(title_header_content)
         return result
