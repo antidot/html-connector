@@ -103,7 +103,15 @@ class HtmlSplitter(BaseHtmlSplitter):
         after = self.content
         for tag in parsed_html.find_all(self.HEADER_REGEX):
             html_splitted_by_tag = after.split(str(tag))
-            # assert  len(html_splitted_by_tag) >= 2, "Cannot find '{}' in '{}'".format(tag, after)
+            if len(html_splitted_by_tag) >= 1:
+                end_tag = "</{}>".format(tag.name)
+                html_splitted_manually = after.split(end_tag)
+                html_splitted_by_tag[0] = html_splitted_manually[0].split("<{}".format(tag.name))[0]
+                begin_tag = "<{}".format(tag.name)
+                html_splitted_by_tag = [
+                    html_splitted_manually[0].split(begin_tag)[0],
+                    end_tag.join(html_splitted_manually[1:]),
+                ]
             after = "".join(html_splitted_by_tag[1:])
             title = self.__get_text_from_tag(tag)
             if not title:
