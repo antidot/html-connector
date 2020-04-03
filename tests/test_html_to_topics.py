@@ -132,9 +132,9 @@ class TestHtmlToTopics(unittest.TestCase):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("images.html"))
         toc_nodes, resources = HtmlToTopics(splitter).topics
         self.assertEqual(len(resources), 6)
-        self.assertEqual(len(toc_nodes), 2)
-        self.assertEqual(len(toc_nodes[1].children), 12)
-        self.assertEqual(toc_nodes[1].children[1].title, "The alt Attribute ")
+        self.assertEqual(len(toc_nodes), 1)
+        self.assertEqual(len(toc_nodes[0].children), 12)
+        self.assertEqual(toc_nodes[0].children[1].title, "The alt Attribute ")
 
     def test_real_world_example(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("iphone5repare.html"))
