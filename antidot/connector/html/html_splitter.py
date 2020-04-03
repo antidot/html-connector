@@ -102,21 +102,18 @@ class HtmlSplitter(BaseHtmlSplitter):
         split_content = []
         after = self.content
         for tag in parsed_html.find_all(self.HEADER_REGEX):
-            html_splitted_by_tag = after.split(str(tag))
-            if len(html_splitted_by_tag) >= 1:
+            html_split_by_tag = after.split(str(tag))
+            if len(html_split_by_tag) >= 1:
                 end_tag = "</{}>".format(tag.name)
-                html_splitted_manually = after.split(end_tag)
-                html_splitted_by_tag[0] = html_splitted_manually[0].split("<{}".format(tag.name))[0]
+                html_split_manually = after.split(end_tag)
+                html_split_by_tag[0] = html_split_manually[0].split("<{}".format(tag.name))[0]
                 begin_tag = "<{}".format(tag.name)
-                html_splitted_by_tag = [
-                    html_splitted_manually[0].split(begin_tag)[0],
-                    end_tag.join(html_splitted_manually[1:]),
-                ]
-            after = "".join(html_splitted_by_tag[1:])
+                html_split_by_tag = [html_split_manually[0].split(begin_tag)[0], end_tag.join(html_split_manually[1:])]
+            after = "".join(html_split_by_tag[1:])
             title = self.__get_text_from_tag(tag)
             if not title:
                 has_empty_title = True
-            split_content += [html_splitted_by_tag[0], {"title": title, "header_type": tag.name}]
+            split_content += [html_split_by_tag[0], {"title": title, "header_type": tag.name}]
         split_content.append(after)
         if has_empty_title:
             split_content = self.__remove_empty_titles(split_content)
