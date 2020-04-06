@@ -41,15 +41,7 @@ class TestHtmlSplitter(unittest.TestCase):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("empty_title.html"))
         expected = [
             {
-                "content": "\n"
-                "\n"
-                "Introduction\n"
-                "\n"
-                "    \n"
-                "\n"
-                "Text that should be in the introduction.\n"
-                "\n"
-                "    ",
+                "content": "\n\nIntroduction\n\n    \n\nText that should be in the introduction.\n\n    ",
                 "header_type": "h1",
                 "title": "Cover Page",
             },
