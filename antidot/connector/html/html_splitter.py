@@ -82,16 +82,16 @@ class HtmlSplitter(BaseHtmlSplitter):
         highest_level_header = min(headers)
         father = flat_headers[0]
         children = []
-        for content in flat_headers[1:]:
-            if content["header_type"] == highest_level_header:
-                if father != content:
+        for current in flat_headers[1:]:
+            if current["header_type"] == highest_level_header:
+                if father != current:
                     if children:
                         father["children"] = self.__get_hierarchized_content(children)
                     hierarchized.append(father)
                 children = []
-                father = content
+                father = current
             else:
-                children.append(content)
+                children.append(current)
         if children:
             father["children"] = self.__get_hierarchized_content(children)
         hierarchized.append(father)
