@@ -23,6 +23,13 @@ class BaseHtmlSplitter:
         re_search = BaseHtmlSplitter.INTERNAL_BODY_FINDER.search(html)
         if re_search:
             return re_search.group(1)
+        opening_body = "<body" in html
+        closing_body = "</body" in html
+        if opening_body:
+            without_body = "<body".join(html.split("<body")[1:])
+            html = ">".join(without_body.split(">")[1:])
+        if closing_body:
+            html = "</body".join(html.split("</body")[0:-1])
         return html
 
     def __init__(self, content=None, path=None, parser="lxml"):

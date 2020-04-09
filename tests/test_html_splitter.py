@@ -145,7 +145,6 @@ class TestHtmlSplitter(unittest.TestCase):
             '<a id="_Toc126736819"></a><a id="_Toc127339767"></a>'
             '<a id="_Toc315192141"></a><a id="_Toc424140849"></a>Analoge Ausgänge'
         )
-        splitter = HtmlSplitter("<h1>%s</h1><h2>%s</h2>" % (h2_title, h1_title))
         expected = [
             {
                 "content": "",
@@ -154,11 +153,33 @@ class TestHtmlSplitter(unittest.TestCase):
                 "title": "Analoge Ausgänge",
             }
         ]
-        self.assertEqual(splitter.split(), expected)
+        headers = HtmlSplitter("<h1>%s</h1><h2>%s</h2>" % (h2_title, h1_title)).split()
+        self.assertEqual(headers, expected)
+
+    def test_malformed(self):
+        expected = [
+            {
+                "title": "Heading 3",
+                "header_type": "h3",
+                "content": "\na\n",
+                "children": [{"title": "Heading 6", "header_type": "h6", "content": "\nb\n"}],
+            }
+        ]
+        for file in ["malformed.html", "malformed2.html"]:
+            headers = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath(file)).split()
+            self.assertEqual(headers, expected)
+        expected = [
+            {
+                "title": "Heading 3",
+                "header_type": "h3",
+                "content": '\na\n</body class="page-background">\n<h6>Heading 6</h6>\nb\n',
+            }
+        ]
+        headers = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("malformed3.html")).split()
+        self.assertEqual(headers, expected)
 
     def test_convoluted(self):
-        splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("convoluted_javascripted.html"))
-        headers = splitter.split()
+        headers = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("convoluted_javascripted.html")).split()
         expected = [
             {
                 "children": [
