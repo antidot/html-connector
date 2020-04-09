@@ -125,6 +125,21 @@ def html_to_fluid_api_plugin(html_path) -> list[Publication]:
 
 ## Optional arguments
 
+### Rendering the coverpage
+
+You can render the coverpage using the render_cover_page option.
+
+```python
+from antidot.connector.html import publish_html, publish_html_with_client, html_to_fluid_api
+from fluidtopics.connector import RemoteClient
+
+publish_html(html_path, url, login, password, render_cover_page=True)
+publish_html_with_client(html_path, RemoteClient(url, login, password, source_id), render_cover_page=True)
+publication = html_to_fluid_api(html_path, title, render_cover_page=True)
+```
+
+For the binary it's `--render-cover-page`.
+
 ### Adding metadata
 
 You can also add metadata to the publication. In order to do that give a

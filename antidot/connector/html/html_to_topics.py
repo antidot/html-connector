@@ -10,9 +10,11 @@ LOGGER = logging.getLogger(__name__)
 
 
 class HtmlToTopics:
-    def __init__(self, html_splitter):
+    def __init__(self, html_splitter, render_cover_page=False):
         self.path = html_splitter.path
         self.table_of_content = html_splitter.split()
+        if not render_cover_page and self.table_of_content[0]["title"] == "Cover Page":
+            self.table_of_content = self.table_of_content[1:]
         self.resources = []
 
     def set_resources_from_html(self, html):

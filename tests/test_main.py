@@ -54,3 +54,8 @@ class TestMain(unittest.TestCase):
         with self.assertRaises(FileNotFoundError) as e:
             run()
         self.assertIn("[Errno 2] No such file or directory: 'path'", str(e.exception))
+
+    def test_cover_page(self):
+        sys.argv = BASE + [str(HTML_PATHS[0]), "--render-cover-page"]
+        with self.assertRaises(requests.exceptions.MissingSchema):
+            self.assertEqual(run(), None, "Problem with --render-cover-page")

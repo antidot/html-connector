@@ -16,24 +16,16 @@ LOGGER = logging.getLogger(__name__)
 HTML_CONNECTOR_SOURCE_ID = "HTMLConnector"
 
 
-def publish_html_with_client(
-    html_path: str, client: Client, metadatas: Optional[list] = None, use_ftml: Optional[bool] = False
-):
-    return ClientAuthentication(html_to_fluid_api, client)(html_path=html_path, metadatas=metadatas, use_ftml=use_ftml)
+def publish_html_with_client(html_path: str, client: Client, **kwargs):
+    return ClientAuthentication(html_to_fluid_api, client)(html_path=html_path, **kwargs)
 
 
 def publish_html(
-    html_path: str,
-    url: str,
-    login: str,
-    password: str,
-    source_id: Optional[str] = HTML_CONNECTOR_SOURCE_ID,
-    use_ftml: Optional[bool] = False,
-    metadatas: Optional[list] = None,
+    html_path: str, url: str, login: str, password: str, source_id: Optional[str] = HTML_CONNECTOR_SOURCE_ID, **kwargs
 ):  # pylint: disable=too-many-arguments
     return LoginAndPasswordAuthentication(
         html_to_fluid_api, login=login, password=password, url=url, source_id=source_id
-    )(html_path=html_path, metadatas=metadatas, use_ftml=use_ftml)
+    )(html_path=html_path, **kwargs)
 
 
 def run():
@@ -47,7 +39,14 @@ def run():
     elif args.verbose > 1:
         logging.basicConfig(level=logging.DEBUG)
         logging.debug("%s launched in verbose mode", HTML_CONNECTOR_SOURCE_ID)
-    publish_html(html_path=args.path, url=args.url, login=args.login, password=args.password, use_ftml=args.use_ftml)
+    return publish_html(
+        html_path=args.path,
+        url=args.url,
+        login=args.login,
+        password=args.password,
+        use_ftml=args.use_ftml,
+        render_cover_page=args.render_cover_page,
+    )
 
 
 def parse_args():
@@ -60,6 +59,13 @@ def parse_args():
         "--use-ftml",
         help="Use the FTML connector for content splitting",
         dest="use_ftml",
+        action="store_true",
+        default=False,
+    )
+    parser.add_argument(
+        "--render-cover-page",
+        help="Render the cover page.",
+        dest="render_cover_page",
         action="store_true",
         default=False,
     )

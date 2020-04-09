@@ -55,7 +55,7 @@ class TestHtmlToTopics(unittest.TestCase):
 
     def test_heading(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("heading.html"))
-        toc_nodes, resources = HtmlToTopics(splitter).topics
+        toc_nodes, resources = HtmlToTopics(splitter, render_cover_page=True).topics
         expected = [
             NeoTopic(title="Cover Page", content="\n\nIntroduction\n\n"),
             NeoTopic(
@@ -72,7 +72,7 @@ class TestHtmlToTopics(unittest.TestCase):
 
     def test_heading_three_level(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("heading_three_levels.html"))
-        toc_nodes, resources = HtmlToTopics(splitter).topics
+        toc_nodes, resources = HtmlToTopics(splitter, render_cover_page=True).topics
         expected = [
             NeoTopic(title="Cover Page", content="\n\nIntroduction\n\n"),
             NeoTopic(
@@ -92,7 +92,7 @@ class TestHtmlToTopics(unittest.TestCase):
 
     def test_headings(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("headings_simple.html"))
-        toc_nodes, resources = HtmlToTopics(splitter).topics
+        toc_nodes, resources = HtmlToTopics(splitter, render_cover_page=True).topics
         expected = [
             NeoTopic(title="Cover Page", content="z"),
             NeoTopic(
@@ -117,7 +117,7 @@ class TestHtmlToTopics(unittest.TestCase):
 
     def test_empty_title(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("empty_title.html"))
-        toc_nodes, resources = HtmlToTopics(splitter).topics
+        toc_nodes, resources = HtmlToTopics(splitter, render_cover_page=True).topics
         expected = [
             NeoTopic(
                 title="Cover Page", content="\n\nIntroduction\n\n    \nText that should be in the introduction.\n\n    "
@@ -130,7 +130,7 @@ class TestHtmlToTopics(unittest.TestCase):
 
     def test_resource_creation(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("images.html"))
-        toc_nodes, resources = HtmlToTopics(splitter).topics
+        toc_nodes, resources = HtmlToTopics(splitter, render_cover_page=True).topics
         self.assertEqual(len(resources), 6)
         self.assertEqual(len(toc_nodes), 1)
         self.assertEqual(len(toc_nodes[0].children), 12)
@@ -138,7 +138,7 @@ class TestHtmlToTopics(unittest.TestCase):
 
     def test_real_world_example(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("iphone5repare.html"))
-        toc_nodes, resources = HtmlToTopics(splitter).topics
+        toc_nodes, resources = HtmlToTopics(splitter, render_cover_page=True).topics
         self.assertEqual(len(resources), 14)
         self.assertEqual(len(toc_nodes), 2)
         self.assertEqual(toc_nodes[1].title, "Comment remplacer la batterie de l'iPhone 5s")
