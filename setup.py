@@ -11,7 +11,7 @@ def get_readme():
 
 
 TEST_REQUIRES = ["pytest-cov"]
-VERSION = "0.4.6"
+VERSION = "0.4.7"
 NAME = "antidot-html-connector"
 
 setuptools.setup(
@@ -36,7 +36,7 @@ setuptools.setup(
     ],
     packages=setuptools.find_namespace_packages(),
     package_dir={},
-    install_requires=["beautifulsoup4", "fluidtopics>=0.2.0"],
+    install_requires=["beautifulsoup4", "fluidtopics~=0.2.0"],
     tests_require=TEST_REQUIRES,
     extras_require={"test": TEST_REQUIRES},
     url="https://scm.mrs.antidot.net/antidot/html-connector",
