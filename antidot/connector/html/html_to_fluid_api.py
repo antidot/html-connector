@@ -8,7 +8,7 @@ import requests
 from fluidtopics.connector import EditorialType, Metadata, Publication, PublicationBuilder, StructuredContent
 
 from antidot.connector.generic.constants import METADATA_SCRIPT, ORIGIN_ID_MAX_SIZE
-from antidot.connector.html.html_splitter_by_header import HtmlSplitterByHeader
+from antidot.connector.html.html_splitter import HtmlSplitter
 from antidot.connector.html.html_to_topics import HtmlToTopics
 
 LOGGER = logging.getLogger(__name__)
@@ -116,9 +116,9 @@ def ft_content_from_html_content(html_content, title, use_ftml, path):
         resources = []
     else:
         if path:
-            splitter = HtmlSplitterByHeader(path=path)
+            splitter = HtmlSplitter(path=path)
         else:
-            splitter = HtmlSplitterByHeader(content=html_content)
+            splitter = HtmlSplitter(content=html_content)
         toc_nodes, resources = HtmlToTopics(splitter).topics
         content = StructuredContent(toc=toc_nodes, editorial_type=EditorialType.DEFAULT)
     return content, resources
