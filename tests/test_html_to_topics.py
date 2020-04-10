@@ -12,6 +12,13 @@ class TestHtmlToTopics(unittest.TestCase):
 
     maxDiff = None
 
+    def test_empty_content(self):
+        splitter = HtmlSplitter(content="")
+        for render_cover_page in [True, False]:
+            toc_nodes, resources = HtmlToTopics(splitter, render_cover_page=render_cover_page).topics
+            self.assertEqual(toc_nodes, [])
+            self.assertEqual(resources, [])
+
     def test_broken_toc(self):
         # pylint: disable=expression-not-assigned,no-self-use
         class WorstSplitter:
