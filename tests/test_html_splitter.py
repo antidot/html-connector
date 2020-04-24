@@ -245,3 +245,25 @@ class TestHtmlSplitter(unittest.TestCase):
         h2s_of_first_h1 = first_h1.get("children")
         self.assertEqual(len(h2s_of_first_h1), 32)
         self.assertEqual(h2s_of_first_h1[4].get("title"), "\nÉtape 2\n\n")
+
+    def test_anchor(self):
+        headers = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("anchor.html")).split()
+        expected = [
+            {"content": "\n\nIntroduction\n\n", "header_type": "h1", "title": "Cover Page"},
+            {"content": "\n\n", "header_type": "h1", "id": [], "title": "Heading 1"},
+            {
+                "content": """
+
+<!--<h1>Heading 1.3-->
+<a href="#Heading1"> Internal_Link</a>
+<!--</h1>-->
+
+<a href="https://google.com/#Heading2">Clique</a>
+
+""",
+                "header_type": "h1",
+                "id": [],
+                "title": "Heading 1.2",
+            },
+        ]
+        self.assertEqual(headers, expected)
