@@ -39,11 +39,11 @@ def run():
     elif args.verbose > 1:
         logging.basicConfig(level=logging.DEBUG)
         logging.debug("%s launched in verbose mode", HTML_CONNECTOR_SOURCE_ID)
-    kwargs = get_options_from_parsed_args(args)
+    kwargs = get_html_connector_kwargs_options_from_args(args)
     return publish_html(args.path, **kwargs)
 
 
-def add_options_to_parser(parser: argparse.ArgumentParser):
+def add_html_connector_options_to_parser(parser: argparse.ArgumentParser):
     parser.add_argument("--url", help="The remote FT URL", required=True)
     parser.add_argument(
         "--login", help="The login associated with the remote URL", default="root@fluidtopics.com", required=True
@@ -66,7 +66,7 @@ def add_options_to_parser(parser: argparse.ArgumentParser):
     return parser
 
 
-def get_options_from_parsed_args(args):
+def get_html_connector_kwargs_options_from_args(args):
     """Take a parsed ArgumentParser and return a dict of argument."""
     if not args.password:
         args.password = getpass.getpass(
@@ -84,7 +84,7 @@ def get_options_from_parsed_args(args):
 def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("path", help="The path to the file you want to convert.")
-    parser = add_options_to_parser(parser)
+    parser = add_html_connector_options_to_parser(parser)
     parser.add_argument("-v", "--verbose", action="count", default=0)
     args = parser.parse_args()
     return args
