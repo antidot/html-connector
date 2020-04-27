@@ -40,10 +40,15 @@ def run():
         logging.basicConfig(level=logging.DEBUG)
         logging.debug("%s launched in verbose mode", HTML_CONNECTOR_SOURCE_ID)
     kwargs = get_options_from_parsed_args(args)
-    return publish_html(html_path=args.path, url=args.url, login=args.login, password=args.password, **kwargs)
+    return publish_html(args.path, **kwargs)
 
 
 def add_options_to_parser(parser: argparse.ArgumentParser):
+    parser.add_argument("--url", help="The remote FT URL", required=True)
+    parser.add_argument(
+        "--login", help="The login associated with the remote URL", default="root@fluidtopics.com", required=True
+    )
+    parser.add_argument("--password", help="The password associated with the remote URL", required=False)
     parser.add_argument(
         "--use-ftml",
         help="Use the FTML connector for content splitting",
@@ -63,22 +68,25 @@ def add_options_to_parser(parser: argparse.ArgumentParser):
 
 def get_options_from_parsed_args(args):
     """Take a parsed ArgumentParser and return a dict of argument."""
-    return {"use_ftml": args.use_ftml, "render_cover_page": args.render_cover_page}
+    if not args.password:
+        args.password = getpass.getpass(
+            "Please enter the password for {} with login {}:\n".format(args.url, args.login)
+        )
+    return {
+        "url": args.url,
+        "login": args.login,
+        "password": args.password,
+        "use_ftml": args.use_ftml,
+        "render_cover_page": args.render_cover_page,
+    }
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("path", help="The path to the file you want to convert.")
-    parser.add_argument("--url", help="The remote FT url", required=True)
-    parser.add_argument("--login", help="The login associated with the remote url", required=True)
-    parser.add_argument("--password", help="The password associated with the remote url", required=False)
     parser = add_options_to_parser(parser)
     parser.add_argument("-v", "--verbose", action="count", default=0)
     args = parser.parse_args()
-    if not args.password:
-        args.password = getpass.getpass(
-            "Please enter the password for {} with login {}:\n".format(args.url, args.login)
-        )
     return args
 
 
