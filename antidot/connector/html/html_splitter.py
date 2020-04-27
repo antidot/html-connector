@@ -7,7 +7,6 @@ LOGGER = logging.getLogger(__name__)
 
 
 class BaseHtmlSplitter:
-
     """
     Permit to split an HTML file or string
     """
@@ -128,7 +127,8 @@ class HtmlSplitter(BaseHtmlSplitter):
             title = self.__get_text_from_tag(tag)
             if not title:
                 has_empty_title = True
-            split_content += [html_split_by_tag[0], {"title": title, "header_type": tag.name}]
+            ids = [t.get("id") for t in tag.find_all("a", recursive=True)]
+            split_content += [html_split_by_tag[0], {"title": title, "header_type": tag.name, "id": ids}]
         split_content.append(after)
         if has_empty_title:
             split_content = self.__remove_empty_titles(split_content)

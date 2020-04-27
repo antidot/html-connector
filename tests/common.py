@@ -4,6 +4,7 @@ EXPECTED_TABLES = [
     {"title": "Cover Page", "content": "\n\nExample taken on w3c website.\n\n"},
     {
         "title": "HTML Tables",
+        "id": [],
         "content": """
 
 <p>HTML tables start with a table tag.</p>
@@ -15,6 +16,7 @@ EXPECTED_TABLES = [
     },
     {
         "title": "1 Column:",
+        "id": [],
         "content": """
 
 <table>
@@ -28,6 +30,7 @@ EXPECTED_TABLES = [
     },
     {
         "title": "1 Row and 3 Columns:",
+        "id": [],
         "content": """
 <table>
   <tr>
@@ -42,6 +45,7 @@ EXPECTED_TABLES = [
     },
     {
         "title": "3 Rows and 3 Columns:",
+        "id": [],
         "content": """
 <table>
   <tr>
