@@ -37,7 +37,7 @@ class TestHtmlToTopics(unittest.TestCase):
             path = ""
 
             def split(self):
-                return [{"content": None, "header_type": "h1", "title": title}]
+                return [{"content": None, "header_type": "h1", "title": title, "id": None}]
 
         with self.assertRaises(AssertionError) as rte:
             HtmlToTopics(WorseSplitter()).topics
@@ -53,6 +53,7 @@ class TestHtmlToTopics(unittest.TestCase):
                         "children": ["We need a dict"],
                         "header_type": "h1",
                         "title": "Valid title",
+                        "id": None,
                     }
                 ]
 
@@ -127,10 +128,38 @@ class TestHtmlToTopics(unittest.TestCase):
         toc_nodes, resources = HtmlToTopics(splitter, render_cover_page=True).topics
         expected = [
             NeoTopic(
-                title="Cover Page", content="\n\nIntroduction\n\n    \nText that should be in the introduction.\n\n    "
+                title="Cover Page",
+                origin_id=None,
+                content="\n\nIntroduction\n\n    \nText that should be in the introduction.\n\n    ",
             ),
-            NeoTopic(title="Installation", content="\n    a\n    \n    b\n\n    "),
-            NeoTopic(title="Removal", content="\n    c\n    \n    d\n  "),
+            NeoTopic(
+                title="Installation",
+                origin_id="_Ref2A4E1AB689A0D2EE52FF15610E2D8283",
+                content="\n    a\n    \n    b\n\n    ",
+            ),
+            NeoTopic(title="Removal", origin_id="_Re2D8283", content="\n    c\n    \n    d\n  "),
+        ]
+        self.assertEqual(len(resources), 0)
+        self.assertEqual(toc_nodes, expected)
+
+    def test_anchor(self):
+        splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("anchor.html"))
+        toc_nodes, resources = HtmlToTopics(splitter, render_cover_page=True).topics
+        expected = [
+            NeoTopic(title="Cover Page", origin_id=None, content="\n\nIntroduction\n\n"),
+            NeoTopic(title="Heading 1", origin_id="heading1", content='\n\nHeading 1\n\n<a href="heading2"></a>\n\n'),
+            NeoTopic(
+                title="Heading 2",
+                origin_id="heading2",
+                content="""
+        Heading 2
+
+        <a href="heading1"></a>
+
+        <a href="https://google.com/#Heading2">Clique</a>
+
+        """,
+            ),
         ]
         self.assertEqual(len(resources), 0)
         self.assertEqual(toc_nodes, expected)
