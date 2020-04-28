@@ -2,7 +2,7 @@ from fluidtopics.connector import Body, TocNode, Topic
 
 
 class NeoTopic(TocNode):
-    def __init__(self, title, content, *args, children: list = None, **kwargs):
+    def __init__(self, title, content, *args, origin_id=None, children: list = None, **kwargs):
         if children is None:
             children = []
         for child in children:
@@ -13,10 +13,11 @@ class NeoTopic(TocNode):
         if not isinstance(content, str):
             raise TypeError("'content' should be a str but is a {} : {}".format(type(content), content))
         content = " ".join(content.split())
-        hashed_id = hash(title + content)
+        id_ = hash(title + content)
+        if origin_id is not None:
+            id_ = origin_id
         super(NeoTopic, self).__init__(
-            Topic(id=hashed_id, title=title, body=Body("<div>{}</div>".format(content)), *args, **kwargs),
-            children=children,
+            Topic(id=id_, title=title, body=Body("<div>{}</div>".format(content)), *args, **kwargs), children=children
         )
 
     def __repr__(self):
