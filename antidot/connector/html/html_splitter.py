@@ -41,20 +41,20 @@ class BaseHtmlSplitter:
         return html
 
     def parse_id_and_href(self):
-        dico = dict()
+        html_id_to_origin_id = dict()
         parsed_html = BeautifulSoup(self.content, self.parser).body
-        if parsed_html is not None:
+        if parsed_html:
             for tag in parsed_html.find_all(self.HEADER_REGEX):
-                id_ = [
-                    t.get("id") for t in tag.find_all("a", recursive=True) if t.get("id") is not None and parsed_html
-                ]
-                count = 1
-                while count < len(id_):
-                    dico[id_[count]] = id_[0]
-                    count += 1
-        for key, value in dico.items():
-            self.content = self.content.replace("#" + key, value)
-        self.content = self.content.replace("#", "")
+                identifiers = []
+                if tag.get("id"):
+                    identifiers.append(tag.get("id"))
+                identifiers += [t.get("id") for t in tag.find_all("a", recursive=True) if t.get("id")]
+                for identifier in identifiers[1:]:
+                    html_id_to_origin_id[identifier] = identifiers[0]
+
+        for html_id, origin_id in html_id_to_origin_id.items():
+            self.content = self.content.replace("#" + html_id, origin_id)
+        self.content = self.content.replace('"#', '"')
 
     def __init__(self, content=None, path=None, parser="lxml"):
         self.parser = parser
@@ -147,11 +147,13 @@ class HtmlSplitter(BaseHtmlSplitter):
             title = self.__get_text_from_tag(tag)
             if not title:
                 has_empty_title = True
-            id_ = [t.get("id") for t in tag.find_all("a", recursive=True) if t.get("id") is not None]
-            if not id_:
-                split_content += [html_split_by_tag[0], {"title": title, "header_type": tag.name, "id": None}]
-            else:
-                split_content += [html_split_by_tag[0], {"title": title, "header_type": tag.name, "id": id_[0]}]
+            identifiers = []
+            if tag.get("id"):
+                identifiers.append(tag.get("id"))
+            identifiers += [t.get("id") for t in tag.find_all("a", recursive=True) if t.get("id")]
+            identifier = None if not identifiers else identifiers[0]
+            split_content += [html_split_by_tag[0], {"title": title, "header_type": tag.name, "id": identifier}]
+
         split_content.append(after)
         if has_empty_title:
             split_content = self.__remove_empty_titles(split_content)

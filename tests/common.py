@@ -1,10 +1,10 @@
 from antidot.connector.html.html_splitter import BaseHtmlSplitter
 
 EXPECTED_TABLES = [
-    {"title": "Cover Page", "content": "\n\nExample taken on w3c website.\n\n"},
+    {"title": "Cover Page", "id": None, "content": "\n\nExample taken on w3c website.\n\n"},
     {
         "title": "HTML Tables",
-        "id": [],
+        "id": None,
         "content": """
 
 <p>HTML tables start with a table tag.</p>
@@ -16,7 +16,7 @@ EXPECTED_TABLES = [
     },
     {
         "title": "1 Column:",
-        "id": [],
+        "id": None,
         "content": """
 
 <table>
@@ -30,7 +30,7 @@ EXPECTED_TABLES = [
     },
     {
         "title": "1 Row and 3 Columns:",
-        "id": [],
+        "id": None,
         "content": """
 <table>
   <tr>
@@ -45,7 +45,7 @@ EXPECTED_TABLES = [
     },
     {
         "title": "3 Rows and 3 Columns:",
-        "id": [],
+        "id": None,
         "content": """
 <table>
   <tr>

@@ -32,12 +32,12 @@ class TestHtmlSplitter(unittest.TestCase):
     def test_simple_split(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("heading.html"))
         expected = [
-            {"content": "\n\nIntroduction\n\n", "header_type": "h1", "title": "Cover Page"},
+            {"content": "\n\nIntroduction\n\n", "header_type": "h1", "title": "Cover Page", "id": None},
             {
                 "title": "My First Heading",
                 "header_type": "h1",
                 "content": "\n\n<p>My first paragraph.</p>\n\n",
-                "id": [],
+                "id": None,
             },
         ]
         self.assertEqual(splitter.split(), expected)
@@ -49,26 +49,22 @@ class TestHtmlSplitter(unittest.TestCase):
                 "content": "\n\nIntroduction\n\n    \n\nText that should be in the introduction.\n\n    ",
                 "header_type": "h1",
                 "title": "Cover Page",
+                "id": None,
             },
             {
                 "title": "Installation",
                 "content": "\n    a\n    \n    b\n\n    ",
                 "header_type": "h1",
-                "id": ["_Ref2A4E1AB689A0D2EE52FF15610E2D8283", "_Toc18583620"],
+                "id": "_Ref2A4E1AB689A0D2EE52FF15610E2D8283",
             },
-            {
-                "title": "Removal",
-                "content": "\n    c\n    \n    d\n  ",
-                "header_type": "h1",
-                "id": ["_Re2D8283", "_Toc1620"],
-            },
+            {"title": "Removal", "content": "\n    c\n    \n    d\n  ", "header_type": "h1", "id": "_Re2D8283"},
         ]
         self.assertEqual(splitter.split(), expected)
 
     def test_simple_headings(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("standard_headings.html"))
         expected = [
-            {"content": "\n\nIntroduction text document.\n\n", "title": "Cover Page", "header_type": "h1"},
+            {"content": "\n\nIntroduction text document.\n\n", "title": "Cover Page", "header_type": "h1", "id": None},
             {
                 "content": "\n\nIntroduction text 1a\n\n",
                 "children": [
@@ -76,18 +72,18 @@ class TestHtmlSplitter(unittest.TestCase):
                         "content": "\n\nParagraph text 1a-2a\n\n",
                         "header_type": "h2",
                         "title": "Heading 1a-2a",
-                        "id": [],
+                        "id": None,
                     },
                     {
                         "content": "\n\nParagraph text 1a-2b\n\n",
                         "header_type": "h2",
                         "title": "Heading 1a-2b",
-                        "id": [],
+                        "id": None,
                     },
                 ],
                 "header_type": "h1",
                 "title": "Heading 1a",
-                "id": [],
+                "id": None,
             },
             {
                 "content": "\n\nIntroduction text 1b\n\n",
@@ -96,18 +92,18 @@ class TestHtmlSplitter(unittest.TestCase):
                         "content": "\n\nParagraph text 1b-2a\n\n",
                         "header_type": "h2",
                         "title": "Heading 1b-2a",
-                        "id": [],
+                        "id": None,
                     },
                     {
                         "content": "\n\nParagraph text 1b-2b\n\n",
                         "header_type": "h2",
                         "title": "Heading 1b-2b",
-                        "id": [],
+                        "id": None,
                     },
                 ],
                 "header_type": "h1",
                 "title": "Heading 1b",
-                "id": [],
+                "id": None,
             },
         ]
         self.assertEqual(splitter.split(), expected)
@@ -115,29 +111,29 @@ class TestHtmlSplitter(unittest.TestCase):
     def test_simple_split_with_text(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("headings_simple.html"))
         expected = [
-            {"content": "\nz\n", "header_type": "h1", "title": "Cover Page"},
+            {"content": "\nz\n", "header_type": "h1", "title": "Cover Page", "id": None},
             {
                 "content": "\na\n",
                 "children": [
                     {
                         "content": "\nb\n",
-                        "children": [{"content": "\nc\n", "header_type": "h3", "title": "Heading 1-2-3", "id": []}],
+                        "children": [{"content": "\nc\n", "header_type": "h3", "title": "Heading 1-2-3", "id": None}],
                         "header_type": "h2",
                         "title": "Heading 1-2",
-                        "id": [],
+                        "id": None,
                     }
                 ],
                 "header_type": "h1",
                 "title": "Heading 1",
-                "id": [],
+                "id": None,
             },
-            {"content": "\nd\n", "header_type": "h1", "title": "Heading 1.2", "id": []},
+            {"content": "\nd\n", "header_type": "h1", "title": "Heading 1.2", "id": None},
             {
                 "content": "\ne\n",
-                "children": [{"content": "\nf\n", "header_type": "h2", "title": "Heading 1.3-2", "id": []}],
+                "children": [{"content": "\nf\n", "header_type": "h2", "title": "Heading 1.3-2", "id": None}],
                 "header_type": "h1",
                 "title": "Heading 1.3",
-                "id": [],
+                "id": None,
             },
         ]
         self.assertEqual(splitter.split(), expected)
@@ -173,7 +169,7 @@ class TestHtmlSplitter(unittest.TestCase):
 </blockquote>
 """,
             "header_type": "h1",
-            "id": [],
+            "id": "mentions-légales",
         }
         self.assertEqual(splitter.split()[1], expected)
 
@@ -194,12 +190,12 @@ class TestHtmlSplitter(unittest.TestCase):
                         "content": "",
                         "header_type": "h2",
                         "title": "Stellsignal stetig (AO 0-10V)",
-                        "id": ["_Toc126736820", "_Toc127339768", "_Toc315192142", "_Toc424140850"],
+                        "id": "_Toc126736820",
                     }
                 ],
                 "header_type": "h1",
                 "title": "Analoge Ausgänge",
-                "id": ["_Toc126736819", "_Toc127339767", "_Toc315192141", "_Toc424140849"],
+                "id": "_Toc126736819",
             }
         ]
         headers = HtmlSplitter("<h1>%s</h1><h2>%s</h2>" % (h2_title, h1_title)).split()
@@ -207,13 +203,13 @@ class TestHtmlSplitter(unittest.TestCase):
 
     def test_malformed(self):
         expected = [
-            {"content": "\nIntroduction\n\n", "header_type": "h3", "title": "Cover Page"},
+            {"content": "\nIntroduction\n\n", "header_type": "h3", "title": "Cover Page", "id": None},
             {
                 "title": "Heading 3",
                 "header_type": "h3",
                 "content": "\na\n",
-                "children": [{"title": "Heading 6", "header_type": "h6", "content": "\nb\n", "id": []}],
-                "id": [],
+                "children": [{"title": "Heading 6", "header_type": "h6", "content": "\nb\n", "id": None}],
+                "id": None,
             },
         ]
         for file in ["malformed.html", "malformed2.html"]:
@@ -236,22 +232,22 @@ class TestHtmlSplitter(unittest.TestCase):
                         "content": "\n\nThen they format it properly...\n\n",
                         "header_type": "h4",
                         "title": "What is wrong... ",
-                        "id": [],
+                        "id": "statement",
                     },
                     {
                         "content": "\n\n... with javascript and CSS.\n\n",
                         "header_type": "h3",
                         "title": "...with semantic HTML ?",
-                        "id": [],
+                        "id": None,
                     },
                 ],
-                "id": [],
+                "id": "firstone",
             },
             {
                 "title": "Result",
                 "header_type": "h1",
                 "content": "\n\nWell shit goes in, shit comes out !\n\n",
-                "id": [],
+                "id": None,
             },
         ]
         self.assertEqual(headers, expected)
@@ -307,21 +303,60 @@ class TestHtmlSplitter(unittest.TestCase):
     def test_anchor(self):
         headers = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("anchor.html")).split()
         expected = [
-            {"content": "\n\nIntroduction\n\n", "header_type": "h1", "title": "Cover Page"},
-            {"content": "\n\n", "header_type": "h1", "id": [], "title": "Heading 1"},
+            {"content": "\n\nIntroduction\n\n", "header_type": "h1", "title": "Cover Page", "id": None},
+            {
+                "content": '\n\nHeading 1\n\n<a href="heading2"></a>\n\n',
+                "header_type": "h1",
+                "title": "Heading 1",
+                "id": "heading1",
+            },
             {
                 "content": """
 
-<!--<h1>Heading 1.3-->
-<a href="#Heading1"> Internal_Link</a>
-<!--</h1>-->
+Heading 2
+
+<a href="heading1"></a>
 
 <a href="https://google.com/#Heading2">Clique</a>
 
 """,
                 "header_type": "h1",
-                "id": [],
-                "title": "Heading 1.2",
+                "title": "Heading 2",
+                "id": "heading2",
+            },
+        ]
+        self.assertEqual(headers, expected)
+
+    def test_anchor_multiple_id(self):
+        headers = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("anchor_multiple_id.html")).split()
+        expected = [
+            {"content": "\n\nIntroduction\n\n", "header_type": "h1", "title": "Cover Page", "id": None},
+            {
+                "content": "\n"
+                "\n"
+                "Heading 1\n"
+                "\n"
+                '<a href="heading1.1"></a>\n'
+                '<a href="heading1.1"></a>\n'
+                '<a href="heading1.1"></a>\n'
+                "\n"
+                "\n",
+                "header_type": "h1",
+                "title": "Heading 1\n    \n\n",
+                "id": "heading1.1",
+            },
+            {
+                "content": "\n"
+                "\n"
+                "Heading 2\n"
+                "\n"
+                '<a href="heading2.1"></a>\n'
+                '<a href="heading2.1"></a>\n'
+                '<a href="heading2.1"></a>\n'
+                "\n",
+                "header_type": "h1",
+                "title": "Heading 2\n    \n\n",
+                "id": "heading2.1",
             },
         ]
         self.assertEqual(headers, expected)
