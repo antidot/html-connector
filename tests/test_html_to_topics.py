@@ -172,6 +172,49 @@ class TestHtmlToTopics(unittest.TestCase):
         self.assertEqual(len(toc_nodes[0].children), 12)
         self.assertEqual(toc_nodes[0].children[1].title, "The alt Attribute ")
 
+    def test_cover_page(self):
+        splitter = HtmlSplitter(
+            content="""<!DOCTYPE html>
+<html>
+<body>
+a
+<h1>b</h1>
+c
+</body>
+</html>
+"""
+        )
+        toc_nodes, resources = HtmlToTopics(splitter, render_cover_page=True).topics
+        self.assertEqual(resources, [])
+        expected = [NeoTopic(title="Cover Page", content="a\n"), NeoTopic(title="b", content="c\n")]
+        self.assertEqual(toc_nodes, expected)
+        toc_nodes, resources = HtmlToTopics(splitter, render_cover_page=False).topics
+        expected = expected[1:]
+        self.assertEqual(resources, [])
+        self.assertEqual(toc_nodes, expected)
+
+    def test_empty_without_cover_page(self):
+        splitter = HtmlSplitter(
+            content="""<!DOCTYPE html>
+<html>
+<body>
+a
+b
+c
+</body>
+</html>
+"""
+        )
+        toc_nodes, resources = HtmlToTopics(splitter, render_cover_page=True).topics
+        self.assertEqual(resources, [])
+        expected_content = "a\nb\nc\n"
+        expected = [NeoTopic(title="Cover Page", content=expected_content)]
+        self.assertEqual(toc_nodes, expected)
+        toc_nodes, resources = HtmlToTopics(splitter, render_cover_page=False).topics
+        expected = [NeoTopic(title="Flat document", content=expected_content)]
+        self.assertEqual(resources, [])
+        self.assertEqual(toc_nodes, expected)
+
     def test_real_world_example(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("iphone5repare.html"))
         toc_nodes, resources = HtmlToTopics(splitter, render_cover_page=True).topics

@@ -13,8 +13,16 @@ class HtmlToTopics:
     def __init__(self, html_splitter, render_cover_page=False):
         self.path = html_splitter.path
         self.table_of_content = html_splitter.split()
-        if self.table_of_content and not render_cover_page and self.table_of_content[0]["title"] == "Cover Page":
+
+        def cover_page_to_treat(table_of_content):
+            return not render_cover_page and table_of_content[0]["title"] == "Cover Page"
+
+        if len(self.table_of_content) > 1 and cover_page_to_treat(self.table_of_content):
+            # Remove the cover page if there is something else after it
             self.table_of_content = self.table_of_content[1:]
+        if self.table_of_content and cover_page_to_treat(self.table_of_content):
+            # Rename the cover page if there is nothing but a cover page
+            self.table_of_content[0]["title"] = "Flat document"
         self.resources = []
 
     def set_resources_from_html(self, html):
