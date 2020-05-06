@@ -56,9 +56,13 @@ class TestPublishToClient(unittest.TestCase):
         self.assertEqual(response.publications.title, title)
         self.assertEqual(len(response.publications.metadata), 1)
 
-    def assert_url_works(self):
-        client = RemoteClient(url="url", authentication=LoginAuthentication("login", "password"), source_id="source_id")
-        response = publish_html_with_client("https://fr.wikipedia.org/wiki/Miracle", client)
+    def assert_url_works(self, client=None):
+        clients = [
+            RemoteClient(url="url", authentication=LoginAuthentication("login", "password"), source_id="source_id")
+        ]
+        if client:
+            clients.append(client)
+        response = publish_html_with_client("https://fr.wikipedia.org/wiki/Miracle", clients)
         self.assertIsNotNone(response.publications)
         self.assertEqual(len(response.publications.metadata), 1)
 
