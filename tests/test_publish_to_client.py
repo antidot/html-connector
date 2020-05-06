@@ -9,16 +9,30 @@ from .test_main import HTML_PATHS
 
 
 class MockResponse:
-    status_code = 404
-    content = b"erververv"
-
     def __init__(self, publications):
         self.publications = publications
+        self.status_code = 404
+        self.content = b"erververv"
+
+
+def mock_success(self, publications):
+    # pylint: disable=unused-argument
+    response = MockResponse(publications)
+    response.status_code = 200
+    return response
 
 
 def mock_publish(self, publications):
     # pylint: disable=unused-argument
     return MockResponse(publications)
+
+
+def mock_source_id_does_not_exists(self, publications):
+    # pylint: disable=unused-argument
+    response = MockResponse(publications)
+    response.status_code = 404
+    response.content = "{} does not exists".format("source_id").encode()
+    return response
 
 
 class TestPublishToClient(unittest.TestCase):
@@ -42,9 +56,20 @@ class TestPublishToClient(unittest.TestCase):
         self.assertEqual(response.publications.title, title)
         self.assertEqual(len(response.publications.metadata), 1)
 
-    @patch("fluidtopics.connector.RemoteClient.publish", mock_publish)
-    def test_publish_url(self):
+    def assert_url_works(self):
         client = RemoteClient(url="url", authentication=LoginAuthentication("login", "password"), source_id="source_id")
         response = publish_html_with_client("https://fr.wikipedia.org/wiki/Miracle", client)
         self.assertIsNotNone(response.publications)
         self.assertEqual(len(response.publications.metadata), 1)
+
+    @patch("fluidtopics.connector.RemoteClient.publish", mock_publish)
+    def test_publish_url(self):
+        self.assert_url_works()
+
+    @patch("fluidtopics.connector.RemoteClient.publish", mock_success)
+    def test_publish_url_success(self):
+        self.assert_url_works()
+
+    @patch("fluidtopics.connector.RemoteClient.publish", mock_source_id_does_not_exists)
+    def test_publish_url_no_source_id(self):
+        self.assert_url_works()

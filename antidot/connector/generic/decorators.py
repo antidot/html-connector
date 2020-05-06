@@ -24,10 +24,16 @@ class ClientAuthentication:
                 error_msg = str(ExternalSourceIdDoesNotExistsError(client))
                 logging.critical(error_msg)
                 print(Fore.RED + error_msg, Fore.RESET)
-                return response
-            successful_msg = "Uploaded everything to {} successfully : {}.".format(client, response)
-            logging.info(successful_msg)
-            print(Fore.GREEN, successful_msg, Fore.RESET)
+            elif response.status_code == 200:
+                successful_msg = "Uploaded everything to {} successfully : {}.".format(client, response)
+                logging.info(successful_msg)
+                print(Fore.GREEN, successful_msg, Fore.RESET)
+            else:
+                error_msg = "Problem during handling of {} : {} ({})".format(
+                    client, response, response.content.decode("utf8")
+                )
+                logging.critical(error_msg)
+                print(Fore.RED + error_msg, Fore.RESET)
         return response
 
 
