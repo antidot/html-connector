@@ -1,8 +1,11 @@
 import logging
 
+from colorama import Fore, init
 from fluidtopics.connector import LoginAuthentication, RemoteClient
 
 from antidot.connector.generic.external_source_id_does_not_exists_error import ExternalSourceIdDoesNotExistsError
+
+init()
 
 
 class ClientAuthentication:
@@ -18,7 +21,9 @@ class ClientAuthentication:
         for client in self.clients:
             response = client.publish(*publications)
             if response.status_code == 404 and client._sender.source_id in response.content.decode("utf8"):
-                logging.critical(str(ExternalSourceIdDoesNotExistsError(client)))
+                error_msg = str(ExternalSourceIdDoesNotExistsError(client))
+                logging.critical(error_msg)
+                print(Fore.RED + error_msg)
             return response
 
 
