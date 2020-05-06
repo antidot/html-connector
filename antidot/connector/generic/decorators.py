@@ -23,8 +23,12 @@ class ClientAuthentication:
             if response.status_code == 404 and client._sender.source_id in response.content.decode("utf8"):
                 error_msg = str(ExternalSourceIdDoesNotExistsError(client))
                 logging.critical(error_msg)
-                print(Fore.RED + error_msg)
-            return response
+                print(Fore.RED + error_msg, Fore.RESET)
+                return response
+            successful_msg = "Uploaded everything to {} successfully : {}.".format(client, response)
+            logging.info(successful_msg)
+            print(Fore.GREEN, successful_msg, Fore.RESET)
+        return response
 
 
 class LoginAndPasswordAuthentication(ClientAuthentication):

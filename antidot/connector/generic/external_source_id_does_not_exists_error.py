@@ -6,4 +6,6 @@ class ExternalSourceIdDoesNotExistsError(Exception):
         msg = "Please create an 'external' source with the ID '{}' at this URL '{}'".format(
             client._sender.source_id, url
         )
+        msg += " If you would prefer the source to be created automatically, please also add a coment on this ticket:"
+        msg += " https://jira.antidot.net/browse/FT-4795."
         super(ExternalSourceIdDoesNotExistsError, self).__init__(msg)
