@@ -1,7 +1,8 @@
 import logging
+from typing import List, Union
 
 from colorama import Fore, init
-from fluidtopics.connector import LoginAuthentication, RemoteClient
+from fluidtopics.connector import Client, LoginAuthentication, RemoteClient
 
 from antidot.connector.generic.external_source_id_does_not_exists_error import ExternalSourceIdDoesNotExistsError
 
@@ -9,7 +10,7 @@ init()
 
 
 class ClientAuthentication:
-    def __init__(self, function, client):
+    def __init__(self, function, client: Union[Client, List[Client]]):
         self.function = function
         if isinstance(client, list):
             self.clients = client
