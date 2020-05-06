@@ -81,5 +81,5 @@ class TestPublishToClient(unittest.TestCase):
     @patch("fluidtopics.connector.RemoteClient.publish", mock_success)
     def test_multiple_client(self):
         self.assert_url_works(
-            RemoteClient(url="url2", authentication=LoginAuthentication("login2", "password2"), source_id="source_id")
+            RemoteClient(url="url2/", authentication=LoginAuthentication("login2", "password2"), source_id="source_id")
         )
