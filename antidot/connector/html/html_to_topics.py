@@ -34,16 +34,14 @@ class HtmlToTopics:
         if imgs is None:
             return html
         for image in imgs:
-            #  print(image.attrs)
             image_path = image.attrs.get("src")
             if image_path is None or self.path is None:
                 continue
+            if any(image_path.startswith(n) for n in ["https://", "http://", "data:"]):
+                continue
             image_abspath = Path(self.path).parent.joinpath(image_path)
             if not image_abspath.is_file():
-                src = str(image_path)
-                normal_cases = ["https://", "http://", "data:"]
-                if not any([src.startswith(n) for n in normal_cases]):
-                    LOGGER.warning("We did not find <%s> locally", image_path)
+                LOGGER.warning("We did not find <%s> locally", image_path)
                 continue
             content = self.__get_content_from_img_src(image_abspath)
             if self.resource_already_exists(image_abspath):
