@@ -19,12 +19,15 @@ class ClientAuthentication:
 
     def __call__(self, *args, **kwargs):
         publications = self.function(*args, **kwargs)
+        if not publications:
+            print(Fore.YELLOW, "/!\\ We did not have any publications to publish !", Fore.RESET)
+            return None
         for client in self.clients:
             response = client.publish(*publications)
             if response.status_code == 404 and client._sender.source_id in response.content.decode("utf8"):
                 error_msg = str(ExternalSourceIdDoesNotExistsError(client))
                 logging.critical(error_msg)
-                print(Fore.RED + error_msg, Fore.RESET)
+                print(Fore.RED, error_msg, Fore.RESET)
             elif response.status_code == 200:
                 successful_msg = "Uploaded everything to {} successfully : {}.".format(client, response)
                 logging.info(successful_msg)
