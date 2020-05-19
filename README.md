@@ -1,31 +1,31 @@
 # HTML connector
 
-This connector permits to import HTML into your FluidTopics instance from
-your local computer or anything that can run Python3. It creates the table
-of content automatically from the content of your HTML file. The result should
-be available in FluidTopics as soon as the content processing end.
+This connector makes it possible to publish HTML files to a Fluid Topics tenant from
+a local machine or anything that can run Python 3. It automatically creates a Table
+of Contents based on the content of the HTML file. The result should
+be available in Fluid Topics as soon as the content is processed.
 
 # Example
 
-You have an HTML file `lorem.html`:
+For an HTML file `lorem.html`:
 
 ![HTML to import](doc/static/lorem_html.png "HTML to import")
 
 
-And a FluidTopics tenant up and running at "my.fluidtopics.tenant.url".
-You need to have a working python environement locally and to have
-installed the html connector (see "Installing").
+And with a Fluid Topics tenant up and running at "my.fluidtopics.tenant.url".
+It is necessary to have a working local Python environment and to have
+installed the HTML connector (see "Installing").
 
 ```bash
-#  Send "lorem.html" to the FT instance
+# Send "lorem.html" to the FT tenant
 html2ft lorem.html --url my.fluidtopics.tenant.url --login my@ddress.com --password mypassword
 ```
 
-You can see your import in the content processing:
+The publishing run is visible in the Knowledge Hub:
 
 ![Content processing](doc/static/lorem_content_processing.png "Content processing")
 
-And your document is uploaded in FluidTopics with a generated table of content:
+And the document is published to Fluid Topics with an automatically generated Table of Contents:
 
 ![lorem in Fluid topics](doc/static/lorem_ft.png "Lorem in Fluid Topics")
 
@@ -33,9 +33,9 @@ And your document is uploaded in FluidTopics with a generated table of content:
 
 ## Client
 
-You need to have a working python3 environment on your machine.
+It is necessary to have a working local Python 3 environment.
 
-For example, if your on MacOs it means installing pip3 with `brew install pip3`.
+For example, if running MacOs, it is necessary to install pip3 with `brew install pip3`.
 
 ```bash
 pip3 install fluidtopics -U # Necessary because the latest fluidtopics is not on pypi.mrs
@@ -44,7 +44,7 @@ pip3 install antidot-html-connector -i https://pypi.mrs.antidot.net/antidot/stab
 
 ## FT Server
 
-You need to add the external source with ID = `HTMLConnector`. Please
+Add the external source with the ID = `HTMLConnector`. Please
 make it known here (https://jira.antidot.net/browse/FT-4795)
 if you want to not have to do that.
 
@@ -52,20 +52,20 @@ if you want to not have to do that.
 
 ## Using as a binary
 
-The `html2ft` binary will publish the HTML document in your FluidTopics
-instance and create its table of content automatically.
+The `html2ft` binary will publish the HTML document to your Fluid Topics
+tenant and create its Table of Contents automatically.
 
 ```
 html2ft path/to/file.html --url my.fluidtopics.tenant.url --login my@ddress.com
 ```
 
-You can add the `--verbose` or `--password myStr0ngP@ssword` options.
+It is possible to add the `--verbose` or `--password myStr0ngP@ssword` options.
 
 ## Using as a library
 
 ### Sending directly to FT
 
-If you want to send your data directly to FluidTopics:
+To send data directly to Fluid Topics:
 
 ```python
 from antidot.connector.html import publish_html
@@ -73,7 +73,7 @@ from antidot.connector.html import publish_html
 publish_html("path/to/file.html", "my.fluidtopics.tenant.url", "my@ddress.com", "myStr0ngP@ssword")
 ```
 
-You can also use a Client object from the fluidtopics package:
+It is also possible to use a Client object from the fluidtopics package:
 
 ```python
 from fluidtopics.connector import RemoteClient
@@ -83,9 +83,9 @@ client = RemoteClient("my.fluidtopics.tenant.url", "my@ddress.com", "myStr0ngP@s
 publish_html_with_client("path/to/file.html", client=client)
 ```
 
-### Getting the intermediary publications objects
+### Getting intermediary publication objects
 
-If you want to get the publications from your html file:
+To get publications from the HTML file:
 
 ```python
 from antidot.connector.html import html_to_fluid_api
@@ -93,8 +93,8 @@ from antidot.connector.html import html_to_fluid_api
 publication = html_to_fluid_api("path/to/file.html", "Publication title")
 ```
 
-Using the function that return publications you can use a decorator
-for the connexion:
+When using the function that returns publications, it is possible to use a decorator
+for the connection:
 
 ```python
 from datetime import datetime
@@ -129,9 +129,9 @@ def html_to_fluid_api_plugin(html_path) -> list[Publication]:
 
 ## Optional arguments
 
-### Rendering the coverpage
+### Rendering the cover page
 
-You can render the coverpage using the render_cover_page option.
+A render_cover_page option is available.
 
 ```python
 from fluidtopics.connector import RemoteClient
@@ -153,11 +153,11 @@ publish_html_with_client(
 publication = html_to_fluid_api("path/to/file.html", "My title", use_ftml=True)
 ```
 
-For the binary it's `--render-cover-page`.
+For the binary, it's `--render-cover-page`.
 
 ### Adding metadata
 
-You can also add metadata to the publication. In order to do that give a
+It is also possible to add metadata to the publication by providing a
 list of metadata with the metadatas parameter:
 
 ```python
@@ -192,15 +192,15 @@ publication = html_to_fluid_api("path/to/file.html", "Publication title", use_ft
 
 ### Optional FTML splitting algorithm
 
-If you can and want to use the FTML you also need to install the FTML connector:
+To publish FTML, it is also necessary to install the FTML connector:
 
 ```bash
 pip3 install antidot-fluidtopics-ftml-connector -i https://pypi.mrs.antidot.net/antidot/stable/
 ```
 
-You can then use the binary with the `--use-ftml` option.
+Once the connector is installed, the binary with the `--use-ftml` option is available.
 
-If the FTML connector is installed you can then add the `use_ftml` parameter:
+To add the `use_ftml` parameter:
 
 ```python
 from antidot.connector.html import publish_html, publish_html_with_client, html_to_fluid_api
@@ -227,7 +227,7 @@ publication = html_to_fluid_api(html_path, title, use_ftml=True)
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-# Use
+# Use
 pip3 install -e .
 html2ft -h
 # Test
