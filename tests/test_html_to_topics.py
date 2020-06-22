@@ -219,8 +219,8 @@ c
     def test_real_world_example(self):
         splitter = HtmlSplitter(path=Path(FIXTURE_DIR).joinpath("iphone5repare.html"))
         html2topics = HtmlToTopics(splitter, render_cover_page=True)
-        topics = html2topics.topics
         self.assertEqual(len(html2topics.resources), 14)
+        topics = html2topics.topics
         self.assertEqual(len(topics), 2)
         self.assertEqual(topics[1].title, "Comment remplacer la batterie de l'iPhone 5s")
         self.assertEqual(len(topics[1].children), 32)

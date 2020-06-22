@@ -24,6 +24,9 @@ class HtmlToTopics:
             # Rename the cover page if there is nothing but a cover page
             self.table_of_content[0]["title"] = "Flat document"
         self.resources = []
+        self.metadata = []
+        # self.resources is set during topics creation
+        self.topics = self.__topics()
 
     def set_resources_from_html(self, html):
         """Create the resource and change the HTML to include them. """
@@ -91,8 +94,7 @@ class HtmlToTopics:
         #  logging.debug("Final toc is : {}".format(fluid_children))
         return NeoTopic(title=title, content=content, origin_id=origin_id, children=fluid_children)
 
-    @property
-    def topics(self) -> [NeoTopic]:
+    def __topics(self) -> [NeoTopic]:
         result = []
         for part in self.table_of_content:
             try:
