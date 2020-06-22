@@ -92,7 +92,7 @@ class HtmlToTopics:
         return NeoTopic(title=title, content=content, origin_id=origin_id, children=fluid_children)
 
     @property
-    def topics(self):
+    def topics(self) -> [NeoTopic]:
         result = []
         for part in self.table_of_content:
             try:
@@ -107,5 +107,4 @@ class HtmlToTopics:
             result.append(
                 self.transform_to_fluid_api(title=title, content=content, origin_id=origin_id, children=children)
             )
-            # logging.debug("Topics : {}".format(result))
-        return result, self.resources
+        return result

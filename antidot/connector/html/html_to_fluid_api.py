@@ -123,8 +123,9 @@ def ft_content_from_html_content(html_content, title, use_ftml, render_cover_pag
             splitter = HtmlSplitter(path=path)
         else:
             splitter = HtmlSplitter(content=html_content)
-        toc_nodes, resources = HtmlToTopics(splitter, render_cover_page=render_cover_page).topics
-        content = StructuredContent(toc=toc_nodes, editorial_type=EditorialType.DEFAULT)
+        html2topics = HtmlToTopics(splitter, render_cover_page=render_cover_page)
+        content = StructuredContent(toc=(html2topics.topics), editorial_type=EditorialType.DEFAULT)
+        resources = html2topics.resources
     return content, resources
 
 
