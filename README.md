@@ -38,14 +38,13 @@ It is necessary to have a working local Python 3 environment.
 For example, if running MacOs, it is necessary to install pip3 with `brew install pip3`.
 
 ```bash
-pip3 install fluidtopics -U # Necessary because the latest fluidtopics is not on pypi.mrs
-pip3 install antidot-html-connector -i https://pypi.mrs.antidot.net/antidot/stable/
+pip3 install antidot-html-connector
 ```
 
 ## FT Server
 
 Add the external source with the ID = `HTMLConnector`. Please
-make it known here (https://jira.antidot.net/browse/FT-4795)
+make it known [here](https://jira.antidot.net/browse/FT-4795)
 if you want to not have to do that.
 
 # Usage
@@ -73,7 +72,7 @@ from antidot.connector.html import publish_html
 publish_html("path/to/file.html", "my.fluidtopics.tenant.url", "my@ddress.com", "myStr0ngP@ssword")
 ```
 
-It is also possible to use a Client object from the fluidtopics package:
+It is also possible to use a Client object from the `fluidtopics` package:
 
 ```python
 from fluidtopics.connector import RemoteClient
@@ -211,7 +210,7 @@ login = "my@ddress.com"
 password = "myStr0ngP@ssword"
 source_id = "MySourceId"
 html_path = "path/to/file.html"
-title = "My Title" 
+title = "My Title"
 
 publish_html(html_path, url, login, password, use_ftml=True)
 publish_html_with_client(html_path, RemoteClient(url, login, password, source_id), use_ftml=True)
