@@ -103,8 +103,9 @@ def treat_metadatas(name, metadatas):
         new_metadatas.append(Metadata.string(METADATA_SCRIPT, [script_name]))
     if logging.WARNING and not found_origin_id:
         LOGGER.warning(
-            "We used a default origin_id based on the file name and its metadatas."
-            " Sending the same file with the same metadata will replace it."
+            "For <%s>, we used a default origin_id based on the file name and its metadatas."
+            " Sending the same file with the same metadata will replace it.",
+            name,
         )
     return name, new_metadatas
 
